@@ -1,0 +1,13 @@
+Copyright (C) 2005 by EUMETSAT
+
+The Licensee acknowledges that the AVISA software is owned by the European
+Organisation for the Exploitation of Meteorological Satellites
+(EUMETSAT) and the Licensee shall not transfer, assign, sub-licence,
+reproduce or copy the AVISA software to any third party or part with
+possession of this software or any part thereof in any way whatsoever.
+
+This library is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.
+The AVISA software has been developed using the ESA BEAM software which is
+distributed under the GNU General Public License (GPL).

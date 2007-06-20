@@ -1,0 +1,41 @@
+<module>
+    <manifestVersion>1.0.0</manifestVersion>
+    <symbolicName>beam-metop-avhrr-reader</symbolicName>
+    <version>1.0</version>
+    <name>MetOp-AVHRR Product Reader</name>
+
+    <description>
+        A product reader for MetOp-AVHRR files.
+    </description>
+    <changelog>
+        <![CDATA[Initial release.]]>
+    </changelog>
+    <vendor>Brockmann Consult GmbH</vendor>
+    <contactAddress>Max Planck Str.2, 21502 Geesthacht (Germany)</contactAddress>
+    <copyright>(C) 2007 by Brockmann Consult GmbH</copyright>
+    <url>http://envisat.esa.int/beam</url>
+
+
+    <dependency>
+        <module>beam-core</module>
+    </dependency>
+    <dependency>
+        <module>beam-avhrr-reader</module>
+    </dependency>
+
+    <categories>AVHRR,MetOp,Reader,VISAT</categories>
+
+    <extension point="beam-visat:actions">
+        <action>
+            <id>importMetopAvhrr3L1Product</id>
+            <class>org.esa.beam.visat.actions.ProductImportAction</class>
+            <formatName>METOP_AVHRR_3_L1B</formatName>
+            <useAllFileFilter>true</useAllFileFilter>
+            <text>Import MetOp-AVHRR/3 Level-1b Product (or Subset)...</text>
+            <mnemonic></mnemonic>
+            <shortDescr>Import a MetOp-AVHRR/3 Level-1b data product or product subset.</shortDescr>
+            <description>Import a MetOp-AVHRR/3 Level-1b data product or product subset.</description>
+        </action>
+    </extension>
+
+</module>

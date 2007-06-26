@@ -20,6 +20,7 @@ package org.eumetsat.beam.dataio.metop;
 
 import org.esa.beam.framework.dataio.ProductReader;
 import org.esa.beam.framework.dataio.ProductReaderPlugIn;
+import org.esa.beam.framework.dataio.DecodeQualification;
 import org.esa.beam.util.io.BeamFileFilter;
 
 import java.io.File;
@@ -43,12 +44,12 @@ public class MetopReaderPlugIn implements ProductReaderPlugIn {
     public MetopReaderPlugIn() {
     }
 
-    public boolean canDecodeInput(Object input) {
+    public DecodeQualification getDecodeQualification(Object input) {
         File file = getInputFile(input);
-        if (file != null) {
-            return MetopReader.canOpenFile(file);
+        if (file != null && MetopReader.canOpenFile(file)) {
+            return DecodeQualification.INTENDED;
         }
-        return false;
+        return DecodeQualification.UNABLE;
     }
 
     public static File getInputFile(Object input) {

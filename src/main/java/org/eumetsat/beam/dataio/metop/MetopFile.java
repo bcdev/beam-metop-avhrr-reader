@@ -171,18 +171,22 @@ public class MetopFile extends AvhrrFile {
         productHeight = productHeight - toSkip;
     }
 
+    @Override
     public String getProductName() {
         return mainProductHeaderRecord.getValue("PRODUCT_NAME");
     }
 
+    @Override
     public UTC getStartDate() {
         return mphrHeader.recordStartTime;
     }
 
+    @Override
     public UTC getEndDate() {
         return mphrHeader.recordEndTime;
     }
 
+    @Override
     public List getMetaData() {
         List<MetadataElement> metaDataList = new ArrayList<MetadataElement>();
 
@@ -192,14 +196,17 @@ public class MetopFile extends AvhrrFile {
         return metaDataList;
     }
 
+    @Override
     public BandReader createVisibleRadianceBandReader(int channel) {
         return new PlainBandReader(channel, this, inputStream);
     }
 
+    @Override
     public BandReader createIrRadianceBandReader(int channel) {
         return new PlainBandReader(channel, this, inputStream);
     }
 
+    @Override
     public BandReader createReflectanceFactorBandReader(int channel) {
         RadianceCalibrator radianceCalibrator = new Radiance2ReflectanceFactorCalibrator(
                 giadrRadiance.getEquivalentWidth(channel), giadrRadiance
@@ -209,6 +216,7 @@ public class MetopFile extends AvhrrFile {
                                         radianceCalibrator);
     }
 
+    @Override
     public BandReader createIrTemperatureBandReader(int channel) {
         RadianceCalibrator radianceCalibrator = new Radiance2TemperatureCalibrator(
                 giadrRadiance.getConstant1(channel), giadrRadiance
@@ -226,6 +234,7 @@ public class MetopFile extends AvhrrFile {
         return secondaryProductHeaderRecord.getIntValue("NAV_SAMPLE_RATE");
     }
 
+    @Override
     public String[] getTiePointNames() {
         return new String[]{AvhrrConstants.SZA_DS_NAME,
                 AvhrrConstants.VZA_DS_NAME, AvhrrConstants.SAA_DS_NAME,
@@ -233,6 +242,7 @@ public class MetopFile extends AvhrrFile {
                 AvhrrConstants.LON_DS_NAME};
     }
 
+    @Override
     public float[][] getTiePointData() throws IOException {
         final int navSampleRate = getNavSampleRate();
         final int gridHeight = getProductHeight()
@@ -271,10 +281,12 @@ public class MetopFile extends AvhrrFile {
         return tiePointData;
     }
 
+    @Override
     public int getScanLineOffset(int rawY) {
         return firstMdrOffset + (rawY * mdrSize); // 26660 MDR-1B size
     }
 
+    @Override
     public int getFlagOffset(int rawY) {
         int flagOffset = getScanLineOffset(rawY) + FLAG_OFFSET;
         if (numNavPoints == LOW_PRECISION_TIE_POINT_WIDTH) {

@@ -20,15 +20,25 @@ package org.eumetsat.beam.dataio.metop;
 
 import org.esa.beam.dataio.avhrr.AvhrrConstants;
 import org.esa.beam.dataio.avhrr.AvhrrReader;
+import org.esa.beam.dataio.avhrr.BandReader;
+import org.esa.beam.dataio.avhrr.noaa.CloudReader;
+import org.esa.beam.dataio.avhrr.noaa.NoaaFile;
 import org.esa.beam.framework.dataio.IllegalFileFormatException;
 import org.esa.beam.framework.dataio.ProductReaderPlugIn;
+import org.esa.beam.framework.datamodel.Band;
+import org.esa.beam.framework.datamodel.BitmaskDef;
+import org.esa.beam.framework.datamodel.FlagCoding;
 import org.esa.beam.framework.datamodel.GeoCoding;
 import org.esa.beam.framework.datamodel.Product;
+import org.esa.beam.framework.datamodel.ProductData;
 import org.esa.beam.framework.datamodel.TiePointGeoCoding;
 import org.esa.beam.framework.datamodel.TiePointGrid;
+import org.esa.beam.framework.datamodel.VirtualBand;
 import org.esa.beam.framework.dataop.maptransf.Datum;
 
 import javax.imageio.stream.FileImageInputStream;
+
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 
@@ -105,6 +115,39 @@ public class MetopReader extends AvhrrReader implements AvhrrConstants {
         product.setGeoCoding(geoCoding);
     }
 
+    @Override
+    protected void addCloudBand() {
+        BandReader cloudReader = new CloudBandReader(avhrrFile,imageInputStream);
+        Band cloudBand = new Band(cloudReader.getBandName(),
+                        cloudReader.getDataType(), avhrrFile.getProductWidth(),
+                        avhrrFile.getProductHeight());
+
+        FlagCoding fc = new FlagCoding(cloudReader.getBandName());
+        fc.setDescription("Flag coding for CLOUD_INFORMATION");
+
+        addFlagAndBitmaskDef(fc, "uniformity_test2", "Uniformity test (0=’test failed’ or ‘clear’; 1=’cloudy’)", 15);
+        addFlagAndBitmaskDef(fc, "uniformity_test1", "Uniformity test (0 =’test failed’ or ‘cloudy’, 1=’clear’)", 14);
+        addFlagAndBitmaskDef(fc, "t3_t5_test2", "T3-T5 test (0=’test failed’ or ‘clear’; 1=’cloudy’)", 13);
+        addFlagAndBitmaskDef(fc, "t3_t5_test1", "T3-T5 test (0 =’test failed’ or ‘cloudy’, 1=’clear’)", 12);
+        addFlagAndBitmaskDef(fc, "t4_t3_test2", "T4-T3 test (0=’test failed’ or ‘clear’; 1=’cloudy’)", 11);
+        addFlagAndBitmaskDef(fc, "t4_t3_test1", "T4-T3 test (0 =’test failed’ or ‘cloudy’, 1=’clear’)", 10);
+        addFlagAndBitmaskDef(fc, "t4_t5_test2", "T4-T5 test (0=’test failed’ or ‘clear’; 1=’cloudy’)", 9);
+        addFlagAndBitmaskDef(fc, "t4_t5_test1", "T4-T5 test (0 =’test failed’ or ‘cloudy’, 1=’clear’)", 8);
+        addFlagAndBitmaskDef(fc, "albedo_test2", "Albedo test (0=’test failed’ or ‘clear’; 1=’cloudy’ or ‘snow/ice covered’)", 7);
+        addFlagAndBitmaskDef(fc, "albedo_test1", "Albedo test (0 =’test failed’ or ‘cloudy’, 1=’clear’ or ‘snow/ice covered’)", 6);
+        addFlagAndBitmaskDef(fc, "t4_test2", "T4 test (0=’test failed’ or ‘clear’; 1=’cloudy’ or ‘snow/ice covered’)", 5);
+        addFlagAndBitmaskDef(fc, "t4_test1", "T4 test (0 =’test failed’ or ‘cloudy’, 1=’clear’ or ‘snow/ice covered’)", 4);
+        
+        cloudBand.setFlagCoding(fc);
+        product.addFlagCoding(fc);
+        product.addBand(cloudBand);
+        product.addBand(new VirtualBand(cloudReader.getBandName()+"_num_tests",
+                ProductData.TYPE_UINT8,
+                avhrrFile.getProductWidth(),
+                avhrrFile.getProductHeight(),
+                cloudReader.getBandName()+" & 15"));
+        bandReaders.put(cloudBand, cloudReader);
+    }
     private void addDeltaAzimuth(int tiePointGridWidth, int tiePointGridHeight, int tiePointSampleRate) {
         float[] sunAzimuthTiePointData = product.getTiePointGrid(SAA_DS_NAME).getTiePoints();
         float[] viewAzimuthTiePointData = product.getTiePointGrid(VAA_DS_NAME).getTiePoints();

@@ -21,6 +21,7 @@ package org.eumetsat.beam.dataio.metop;
 import org.esa.beam.dataio.avhrr.AvhrrConstants;
 import org.esa.beam.dataio.avhrr.AvhrrFile;
 import org.esa.beam.dataio.avhrr.BandReader;
+import org.esa.beam.dataio.avhrr.HeaderUtil;
 import org.esa.beam.dataio.avhrr.calibration.Radiance2ReflectanceFactorCalibrator;
 import org.esa.beam.dataio.avhrr.calibration.Radiance2TemperatureCalibrator;
 import org.esa.beam.dataio.avhrr.calibration.RadianceCalibrator;
@@ -81,6 +82,8 @@ public class MetopFile extends AvhrrFile {
 
     private int numNavPoints;
 
+    private MetadataElement geadrMetadata;
+
     public MetopFile(ImageInputStream imageInputStream) {
         this.inputStream = imageInputStream;
     }
@@ -89,17 +92,16 @@ public class MetopFile extends AvhrrFile {
         mphrHeader = new GenericRecordHeader();
         mphrHeader.readGenericRecordHeader(inputStream);
 
-        if (mphrHeader.recordClass == GenericRecordHeader.RecordClass.MPHR
-                && mphrHeader.instrumentGroup == GenericRecordHeader.InstrumentGroup.GENERIC
-                && mphrHeader.recordSubclass == 0) {
-            mainProductHeaderRecord = new MainProductHeaderRecord();
-            mainProductHeaderRecord.readRecord(inputStream);
-        } else {
+        if (mphrHeader.recordClass != GenericRecordHeader.RecordClass.MPHR
+                || mphrHeader.instrumentGroup != GenericRecordHeader.InstrumentGroup.GENERIC
+                || mphrHeader.recordSubclass != 0) {
             throw new IOException("Unsupported product: bad MPHR. RecordClass="
                     + mphrHeader.recordClass + " InstrumentGroup="
                     + mphrHeader.instrumentGroup + " RecordSubclass="
                     + mphrHeader.recordSubclass);
         }
+        mainProductHeaderRecord = new MainProductHeaderRecord();
+        mainProductHeaderRecord.readRecord(inputStream);
 
         if (mainProductHeaderRecord.getIntValue("TOTAL_SPHR") != 1) {
             throw new IOException("Unsupported Product: more than one SPHR.");
@@ -107,17 +109,16 @@ public class MetopFile extends AvhrrFile {
         GenericRecordHeader sphrHeader = new GenericRecordHeader();
         sphrHeader.readGenericRecordHeader(inputStream);
 
-        if (sphrHeader.recordClass == GenericRecordHeader.RecordClass.SPHR
-                && sphrHeader.instrumentGroup == GenericRecordHeader.InstrumentGroup.AVHRR3
-                && sphrHeader.recordSubclass == 0) {
-            secondaryProductHeaderRecord = new SecondaryProductHeaderRecord();
-            secondaryProductHeaderRecord.readRecord(inputStream);
-        } else {
+        if (sphrHeader.recordClass != GenericRecordHeader.RecordClass.SPHR
+                || sphrHeader.instrumentGroup != GenericRecordHeader.InstrumentGroup.AVHRR_3
+                || sphrHeader.recordSubclass != 0) {
             throw new IOException("Unsupported product: bad SPHR. RecordClass="
                     + sphrHeader.recordClass + " InstrumentGroup="
                     + sphrHeader.instrumentGroup + " RecordSubclass="
                     + sphrHeader.recordSubclass);
         }
+        secondaryProductHeaderRecord = new SecondaryProductHeaderRecord();
+        secondaryProductHeaderRecord.readRecord(inputStream);
 
         if (secondaryProductHeaderRecord.getIntValue("EARTH_VIEWS_PER_SCANLINE") != EXPECTED_PRODUCT_WIDTH) {
             throw new IOException("Unsupported product: bad SPHR. " +
@@ -134,29 +135,37 @@ public class MetopFile extends AvhrrFile {
                     "NAV_SAMPLE_RATE is: " + navSampleRate);
         }
 
-        final int numIPR = mainProductHeaderRecord.getIntValue("TOTAL_IPR");
-        InternalPointerRecord[] iprs = new InternalPointerRecord[numIPR];
+        List<InternalPointerRecord> iprs = new ArrayList<InternalPointerRecord>();
+        InternalPointerRecord internalPointerRecord;
+        do {
+            internalPointerRecord = new InternalPointerRecord();
+            internalPointerRecord.readRecord(inputStream);
+            iprs.add(internalPointerRecord);
+        } while (internalPointerRecord.targetRecordClass != GenericRecordHeader.RecordClass.MDR);
 
-        for (int i = 0; i < numIPR; i++) {
-            iprs[i] = new InternalPointerRecord();
-            iprs[i].readRecord(inputStream);
-            iprs[i].printIPR();
-        }
-
-        for (int i = 0; i < numIPR; i++) {
-            // read GIEDR
-            if (iprs[i].targetRecordClass == GenericRecordHeader.RecordClass.GIADR
-                    && iprs[i].targetRecordSubclass == 1) {
-                giadrRadiance = new GiadrRadiance();
-                giadrRadiance.readRecord(inputStream);
-            }
-            if (iprs[i].targetRecordClass == GenericRecordHeader.RecordClass.GIADR
-                    && iprs[i].targetRecordSubclass == 2) {
-                // GiedrAnalog
-                // data not read
-            }
-            if (iprs[i].targetRecordClass == GenericRecordHeader.RecordClass.MDR) {
-                firstMdrOffset = iprs[i].targetRecordOffset;
+        for (InternalPointerRecord ipr : iprs) {
+            if (ipr.targetRecordClass == GenericRecordHeader.RecordClass.GIADR) {
+                if (ipr.targetRecordSubclass == 1) {
+                    inputStream.seek(ipr.targetRecordOffset);
+                    giadrRadiance = new GiadrRadiance();
+                    giadrRadiance.readRecord(inputStream);
+                } else if (ipr.targetRecordSubclass == 2) {
+                    // GiadrAnalog not read
+                }
+            } else if (ipr.targetRecordClass == GenericRecordHeader.RecordClass.GEADR) {
+                inputStream.seek(ipr.targetRecordOffset);
+                GenericRecordHeader grh = new GenericRecordHeader();
+                grh.readGenericRecordHeader(inputStream);
+                byte[] geadrText= new byte[100];
+                inputStream.read(geadrText);
+                
+                if (geadrMetadata == null) {
+                    geadrMetadata = new MetadataElement("GEADR");
+                }
+                geadrMetadata.addAttribute(HeaderUtil.createAttribute(Integer.toString(grh.recordSubclass),
+                        new String(geadrText)));
+            } else if (ipr.targetRecordClass == GenericRecordHeader.RecordClass.MDR) {
+                firstMdrOffset = ipr.targetRecordOffset;
             }
         }
         productHeight = mainProductHeaderRecord.getIntValue("TOTAL_MDR");
@@ -192,6 +201,9 @@ public class MetopFile extends AvhrrFile {
 
         metaDataList.add(mainProductHeaderRecord.getMetaData());
         metaDataList.add(secondaryProductHeaderRecord.getMetaData());
+        if (geadrMetadata != null) {
+            metaDataList.add(geadrMetadata);    
+        }
         metaDataList.add(giadrRadiance.getMetaData());
         return metaDataList;
     }
@@ -325,7 +337,7 @@ public class MetopFile extends AvhrrFile {
 
                 // check for SPHR and AVHRR/3
                 if (sphrHeader.recordClass == GenericRecordHeader.RecordClass.SPHR
-                        && sphrHeader.instrumentGroup == GenericRecordHeader.InstrumentGroup.AVHRR3
+                        && sphrHeader.instrumentGroup == GenericRecordHeader.InstrumentGroup.AVHRR_3
                         && sphrHeader.recordSubclass == 0) {
                     return true;
                 }
@@ -362,8 +374,7 @@ public class MetopFile extends AvhrrFile {
         final long fileSize = inputStream.length();
         final long expectedFileSize = firstMdrOffset + (productHeight * mdrSize);
         if (fileSize != expectedFileSize) {
-            throw new IOException("Product has wrong file size. Expected filesize: " + expectedFileSize
-                    + " Actual filesize: " + fileSize);
+            productHeight = (int) ((fileSize - firstMdrOffset)/mdrSize);
         }
     }
 }

@@ -35,8 +35,9 @@ class SecondaryProductHeaderRecord extends AsciiRecord {
         super(NUM_FIELDS);
     }
 
+    @Override
     public MetadataElement getMetaData() {
-        final MetadataElement element = new MetadataElement("SECONDARY_PRODUCT_HEADER");
+        final MetadataElement element = new MetadataElement("SPH");
         element.addAttribute(HeaderUtil.createAttribute("SRC_DATA_QUAL", getIntValue("SRC_DATA_QUAL")));
 
         element.addAttribute(HeaderUtil.createAttribute("EARTH_VIEWS_PER_SCANLINE", getIntValue("EARTH_VIEWS_PER_SCANLINE")));

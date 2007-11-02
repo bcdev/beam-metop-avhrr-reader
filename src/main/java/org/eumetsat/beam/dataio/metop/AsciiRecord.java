@@ -70,8 +70,6 @@ abstract class AsciiRecord {
         public KeyValuePair(String field) {
             key = field.substring(0, 30).trim();
             value = field.substring(32).trim();
-
-            System.out.println(field);
         }
     }
 

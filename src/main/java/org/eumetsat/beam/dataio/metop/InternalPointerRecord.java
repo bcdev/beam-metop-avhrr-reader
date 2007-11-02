@@ -19,6 +19,10 @@
 package org.eumetsat.beam.dataio.metop;
 
 import javax.imageio.stream.ImageInputStream;
+
+import org.eumetsat.beam.dataio.metop.GenericRecordHeader.InstrumentGroup;
+import org.eumetsat.beam.dataio.metop.GenericRecordHeader.RecordClass;
+
 import java.io.IOException;
 
 /**
@@ -32,8 +36,8 @@ class InternalPointerRecord {
 
     GenericRecordHeader header;
 
-    int targetRecordClass;
-    int targetInstrumentGroup;
+    RecordClass targetRecordClass;
+    InstrumentGroup targetInstrumentGroup;
     int targetRecordSubclass;
     int targetRecordOffset;
 
@@ -44,14 +48,14 @@ class InternalPointerRecord {
                 header.instrumentGroup != GenericRecordHeader.InstrumentGroup.GENERIC) {
             throw new IllegalArgumentException("bad product"); // TODO
         }
-        header.printGRH();
-        targetRecordClass = imageInputStream.readByte();
-        targetInstrumentGroup = imageInputStream.readByte();
+        targetRecordClass = RecordClass.values()[imageInputStream.readByte()];
+        targetInstrumentGroup = InstrumentGroup.values()[imageInputStream.readByte()];
         targetRecordSubclass = imageInputStream.readByte();
         targetRecordOffset = (int) imageInputStream.readUnsignedInt();
     }
 
     void printIPR() {
+        System.out.println("IPR");
         System.out.println("targetRecordClass " + targetRecordClass);
         System.out.println("targetInstrumentGroup " + targetInstrumentGroup);
         System.out.println("targetRecordSubclass " + targetRecordSubclass);

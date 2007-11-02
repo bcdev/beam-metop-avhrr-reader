@@ -4,7 +4,7 @@
     <groupId>org.esa.beam</groupId>
     <artifactId>beam-metop-avhrr-reader</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>MetOp-AVHRR Product Reader</name>
     <url>http://maven.apache.org</url>
     <dependencies>
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.esa.beam</groupId>
             <artifactId>beam-core</artifactId>
-            <version>4.1-SNAPSHOT</version>
+            <version>4.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

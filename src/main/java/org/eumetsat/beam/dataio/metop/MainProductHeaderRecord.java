@@ -49,9 +49,9 @@ class MainProductHeaderRecord extends AsciiRecord {
         super(NUM_FIELDS);
     }
 
+    @Override
     public MetadataElement getMetaData() {
-        final MetadataElement element = new MetadataElement(
-                "MAIN_PRODUCT_HEADER");
+        final MetadataElement element = new MetadataElement("MPH");
         element.addElement(getProductDetails());
         element.addElement(getAscendingNodeOrbitParameters());
         element.addElement(getLocationSummary());

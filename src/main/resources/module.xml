@@ -1,20 +1,25 @@
 <module>
     <manifestVersion>1.0.0</manifestVersion>
     <symbolicName>beam-metop-avhrr-reader</symbolicName>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>MetOp-AVHRR Product Reader</name>
 
     <description>
         A product reader for MetOp-AVHRR files.
     </description>
     <changelog>
-        <![CDATA[Initial release.]]>
+        <![CDATA[From 1.0 to 1.1<br>
+        <ul>
+        <li>[BEAM-537] Port METOP-AVHRR reader from BEAM 3.7</li>
+        <li>[BEAM-714] Read cloud band from METOP products</li>
+        <li>[BEAM-715] METOP product from UMARFcan not be opened</li>
+        </ul>
+        ]]>
     </changelog>
     <vendor>Brockmann Consult GmbH</vendor>
     <contactAddress>Max Planck Str.2, 21502 Geesthacht (Germany)</contactAddress>
     <copyright>(C) 2007 by Brockmann Consult GmbH</copyright>
     <url>http://envisat.esa.int/beam</url>
-
 
     <dependency>
         <module>beam-core</module>

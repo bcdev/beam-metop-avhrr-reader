@@ -94,7 +94,6 @@ class GiadrRadiance {
     public void readRecord(ImageInputStream inputStream) throws IOException {
         GenericRecordHeader grh = new GenericRecordHeader();
         grh.readGenericRecordHeader(inputStream);
-        grh.printGRH();
 
         rampCalibrationCoefficient = inputStream.readShort();
         yearRecentCalibration = inputStream.readUnsignedShort();

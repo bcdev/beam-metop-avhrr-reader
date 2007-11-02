@@ -33,9 +33,9 @@ import java.io.IOException;
  */
 class GenericRecordHeader {
 
-    public int recordClass;
+    public RecordClass recordClass;
 
-    public int instrumentGroup;
+    public InstrumentGroup instrumentGroup;
 
     public int recordSubclass;
 
@@ -48,8 +48,8 @@ class GenericRecordHeader {
     public ProductData.UTC recordEndTime;
 
     public void readGenericRecordHeader(ImageInputStream imageInputStream) throws IOException {
-        recordClass = imageInputStream.readByte();
-        instrumentGroup = imageInputStream.readByte();
+        recordClass = RecordClass.values()[imageInputStream.readByte()];
+        instrumentGroup = InstrumentGroup.values()[imageInputStream.readByte()];
         recordSubclass = imageInputStream.readByte();
         recordSubclassVersion = imageInputStream.readByte();
         recordSize = imageInputStream.readUnsignedInt();
@@ -62,30 +62,45 @@ class GenericRecordHeader {
     }
 
     public void printGRH() {
+        System.out.println("GRH");
         System.out.println("recordClass: " + recordClass);
         System.out.println("instrumentGroup: " + instrumentGroup);
         System.out.println("recordSubclass: " + recordSubclass);
         System.out.println("recordSubclassVersion: " + recordSubclassVersion);
         System.out.println("recordSize: " + recordSize);
-        System.out.println("recordStartTime: " + recordStartTime);
-        System.out.println("recordEndTime: " + recordEndTime);
+//        System.out.println("recordStartTime: " + recordStartTime);
+//        System.out.println("recordEndTime: " + recordEndTime);
     }
 
-    public class RecordClass {
-        public static final int MPHR = 1;
-        public static final int SPHR = 2;
-        public static final int IPR = 3;
-        public static final int GEADR = 4;
-        public static final int GIADR = 5;
-        public static final int VEADR = 6;
-        public static final int VIADR = 7;
-        public static final int MDR = 8;
+    public enum RecordClass {
+        RESERVED,
+        MPHR,
+        SPHR,
+        IPR,
+        GEADR,
+        GIADR,
+        VEADR,
+        VIADR,
+        MDR
     }
 
-    public class InstrumentGroup {
-        public static final int GENERIC = 0;
-        public static final int ATOVS = 3;
-        public static final int AVHRR3 = 4;
+    public enum InstrumentGroup {
+        GENERIC,
+        AMSU_A,
+        ASCAT,
+        ATOVS,
+        AVHRR_3,
+        GOME,
+        GRAS,
+        HIRS_4,
+        IASI,
+        MHS,
+        SEM,
+        ADCS,
+        SBUV,
+        DUMMY,
+        ARCHIVE,
+        IASI_L2
     }
 
 }

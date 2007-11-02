@@ -141,11 +141,6 @@ public class MetopReader extends AvhrrReader implements AvhrrConstants {
         cloudBand.setFlagCoding(fc);
         product.addFlagCoding(fc);
         product.addBand(cloudBand);
-        product.addBand(new VirtualBand(cloudReader.getBandName()+"_num_tests",
-                ProductData.TYPE_UINT8,
-                avhrrFile.getProductWidth(),
-                avhrrFile.getProductHeight(),
-                cloudReader.getBandName()+" & 15"));
         bandReaders.put(cloudBand, cloudReader);
     }
     private void addDeltaAzimuth(int tiePointGridWidth, int tiePointGridHeight, int tiePointSampleRate) {

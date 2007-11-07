@@ -43,13 +43,22 @@ class InternalPointerRecord {
 
     public void readRecord(ImageInputStream imageInputStream) throws IOException {
         header = new GenericRecordHeader();
-        header.readGenericRecordHeader(imageInputStream);
-        if (header.recordClass != GenericRecordHeader.RecordClass.IPR ||
+        boolean correct = header.readGenericRecordHeader(imageInputStream);
+        if (!correct ||
+                header.recordClass != GenericRecordHeader.RecordClass.IPR ||
                 header.instrumentGroup != GenericRecordHeader.InstrumentGroup.GENERIC) {
-            throw new IllegalArgumentException("bad product"); // TODO
+            throw new IllegalArgumentException("Bad GRH in IPR");
         }
-        targetRecordClass = RecordClass.values()[imageInputStream.readByte()];
-        targetInstrumentGroup = InstrumentGroup.values()[imageInputStream.readByte()];
+        byte trc = imageInputStream.readByte();
+        if (!RecordClass.isValid(trc)) {
+            throw new IllegalArgumentException("Bad IPR");
+        }
+        targetRecordClass = RecordClass.values()[trc];
+        byte tig = imageInputStream.readByte();
+        if (!InstrumentGroup.isValid(tig)) {
+            throw new IllegalArgumentException("Bad IPR");
+        }
+        targetInstrumentGroup = InstrumentGroup.values()[tig];
         targetRecordSubclass = imageInputStream.readByte();
         targetRecordOffset = (int) imageInputStream.readUnsignedInt();
     }

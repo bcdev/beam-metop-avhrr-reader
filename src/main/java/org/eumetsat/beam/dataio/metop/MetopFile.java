@@ -88,11 +88,13 @@ public class MetopFile extends AvhrrFile {
         this.inputStream = imageInputStream;
     }
 
+    @Override
     public void readHeader() throws IOException {
         mphrHeader = new GenericRecordHeader();
-        mphrHeader.readGenericRecordHeader(inputStream);
+        boolean correct = mphrHeader.readGenericRecordHeader(inputStream);
 
-        if (mphrHeader.recordClass != GenericRecordHeader.RecordClass.MPHR
+        if (!correct
+                || mphrHeader.recordClass != GenericRecordHeader.RecordClass.MPHR
                 || mphrHeader.instrumentGroup != GenericRecordHeader.InstrumentGroup.GENERIC
                 || mphrHeader.recordSubclass != 0) {
             throw new IOException("Unsupported product: bad MPHR. RecordClass="
@@ -107,9 +109,10 @@ public class MetopFile extends AvhrrFile {
             throw new IOException("Unsupported Product: more than one SPHR.");
         }
         GenericRecordHeader sphrHeader = new GenericRecordHeader();
-        sphrHeader.readGenericRecordHeader(inputStream);
+        correct = sphrHeader.readGenericRecordHeader(inputStream);
 
-        if (sphrHeader.recordClass != GenericRecordHeader.RecordClass.SPHR
+        if (!correct
+                || sphrHeader.recordClass != GenericRecordHeader.RecordClass.SPHR
                 || sphrHeader.instrumentGroup != GenericRecordHeader.InstrumentGroup.AVHRR_3
                 || sphrHeader.recordSubclass != 0) {
             throw new IOException("Unsupported product: bad SPHR. RecordClass="
@@ -324,23 +327,25 @@ public class MetopFile extends AvhrrFile {
         ImageInputStream inputStream = new FileImageInputStream(file);
         try {
             GenericRecordHeader mphrHeader = new GenericRecordHeader();
-            mphrHeader.readGenericRecordHeader(inputStream);
-
+            boolean correct = mphrHeader.readGenericRecordHeader(inputStream);
             // check for MPHR
-            if (mphrHeader.recordClass == GenericRecordHeader.RecordClass.MPHR
-                    && mphrHeader.instrumentGroup == GenericRecordHeader.InstrumentGroup.GENERIC
-                    && mphrHeader.recordSubclass == 0) {
+            if (!correct 
+                    || mphrHeader.recordClass != GenericRecordHeader.RecordClass.MPHR
+                    || mphrHeader.instrumentGroup != GenericRecordHeader.InstrumentGroup.GENERIC
+                    || mphrHeader.recordSubclass != 0) {
+                return false;
+            }
 
-                inputStream.seek(mphrHeader.recordSize);
-                GenericRecordHeader sphrHeader = new GenericRecordHeader();
-                sphrHeader.readGenericRecordHeader(inputStream);
+            inputStream.seek(mphrHeader.recordSize);
+            GenericRecordHeader sphrHeader = new GenericRecordHeader();
+            correct = sphrHeader.readGenericRecordHeader(inputStream);
 
-                // check for SPHR and AVHRR/3
-                if (sphrHeader.recordClass == GenericRecordHeader.RecordClass.SPHR
-                        && sphrHeader.instrumentGroup == GenericRecordHeader.InstrumentGroup.AVHRR_3
-                        && sphrHeader.recordSubclass == 0) {
-                    return true;
-                }
+            // check for SPHR and AVHRR/3
+            if (correct 
+                    && sphrHeader.recordClass == GenericRecordHeader.RecordClass.SPHR
+                    && sphrHeader.instrumentGroup == GenericRecordHeader.InstrumentGroup.AVHRR_3
+                    && sphrHeader.recordSubclass == 0) {
+                return true;
             }
         } finally {
             inputStream.close();
@@ -367,7 +372,10 @@ public class MetopFile extends AvhrrFile {
         GenericRecordHeader firstMdr = new GenericRecordHeader();
         synchronized (inputStream) {
             inputStream.seek(firstMdrOffset);
-            firstMdr.readGenericRecordHeader(inputStream);
+            boolean correct = firstMdr.readGenericRecordHeader(inputStream);
+            if (!correct) {
+                throw new IllegalArgumentException("Bad GRH in first MDR.");
+            }
         }
         mdrSize = (int) firstMdr.recordSize;
 

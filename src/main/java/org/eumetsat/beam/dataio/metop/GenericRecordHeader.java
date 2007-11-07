@@ -47,11 +47,21 @@ class GenericRecordHeader {
 
     public ProductData.UTC recordEndTime;
 
-    public void readGenericRecordHeader(ImageInputStream imageInputStream) throws IOException {
-        recordClass = RecordClass.values()[imageInputStream.readByte()];
-        instrumentGroup = InstrumentGroup.values()[imageInputStream.readByte()];
-        recordSubclass = imageInputStream.readByte();
-        recordSubclassVersion = imageInputStream.readByte();
+    public boolean readGenericRecordHeader(ImageInputStream imageInputStream) throws IOException {
+        byte rc = imageInputStream.readByte();
+        if (!RecordClass.isValid(rc)) {
+            return false;
+        }
+        recordClass = RecordClass.values()[rc];
+        
+        byte ig = imageInputStream.readByte();
+        if (!InstrumentGroup.isValid(ig)) {
+            return false;
+        }
+        instrumentGroup = InstrumentGroup.values()[ig];
+        
+        recordSubclass = rc;
+        recordSubclassVersion = rc;
         recordSize = imageInputStream.readUnsignedInt();
         int day = imageInputStream.readUnsignedShort();
         long millis = imageInputStream.readUnsignedInt();
@@ -59,6 +69,7 @@ class GenericRecordHeader {
         day = imageInputStream.readUnsignedShort();
         millis = imageInputStream.readUnsignedInt();
         recordEndTime = new UTC(day, (int) millis / 1000, (int) millis % 1000);
+        return true;
     }
 
     public void printGRH() {
@@ -81,7 +92,11 @@ class GenericRecordHeader {
         GIADR,
         VEADR,
         VIADR,
-        MDR
+        MDR;
+        
+        public static boolean isValid(int index) {
+            return (index >=0 && index <= 8);
+        }
     }
 
     public enum InstrumentGroup {
@@ -100,7 +115,11 @@ class GenericRecordHeader {
         SBUV,
         DUMMY,
         ARCHIVE,
-        IASI_L2
+        IASI_L2;
+        
+        public static boolean isValid(int index) {
+            return (index >=0 && index <= 15);
+        }
     }
 
 }

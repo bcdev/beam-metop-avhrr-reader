@@ -32,14 +32,14 @@ import java.io.IOException;
  * @author marcoz
  * @version $Revision: 1.1.1.1 $ $Date: 2007/03/22 11:12:51 $
  */
-class InternalPointerRecord {
+public class InternalPointerRecord {
 
     GenericRecordHeader header;
 
-    RecordClass targetRecordClass;
-    InstrumentGroup targetInstrumentGroup;
-    int targetRecordSubclass;
-    int targetRecordOffset;
+    public RecordClass targetRecordClass;
+    public InstrumentGroup targetInstrumentGroup;
+    public int targetRecordSubclass;
+    public int targetRecordOffset;
 
     public void readRecord(ImageInputStream imageInputStream) throws IOException {
         header = new GenericRecordHeader();
@@ -51,19 +51,19 @@ class InternalPointerRecord {
         }
         byte trc = imageInputStream.readByte();
         if (!RecordClass.isValid(trc)) {
-            throw new IllegalArgumentException("Bad IPR");
+            throw new IllegalArgumentException("Bad IPR: wrong targetRecordClass="+trc);
         }
         targetRecordClass = RecordClass.values()[trc];
         byte tig = imageInputStream.readByte();
         if (!InstrumentGroup.isValid(tig)) {
-            throw new IllegalArgumentException("Bad IPR");
+            throw new IllegalArgumentException("Bad IPR: wrong targetInstrumentGroup"+tig);
         }
         targetInstrumentGroup = InstrumentGroup.values()[tig];
         targetRecordSubclass = imageInputStream.readByte();
         targetRecordOffset = (int) imageInputStream.readUnsignedInt();
     }
 
-    void printIPR() {
+    public void printIPR() {
         System.out.println("IPR");
         System.out.println("targetRecordClass " + targetRecordClass);
         System.out.println("targetInstrumentGroup " + targetInstrumentGroup);

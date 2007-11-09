@@ -31,7 +31,7 @@ import java.io.IOException;
  * @author marcoz
  * @version $Revision: 1.1.1.1 $ $Date: 2007/03/22 11:12:51 $
  */
-class GenericRecordHeader {
+public class GenericRecordHeader {
 
     public RecordClass recordClass;
 
@@ -60,8 +60,8 @@ class GenericRecordHeader {
         }
         instrumentGroup = InstrumentGroup.values()[ig];
         
-        recordSubclass = rc;
-        recordSubclassVersion = rc;
+        recordSubclass = imageInputStream.readByte();
+        recordSubclassVersion = imageInputStream.readByte();
         recordSize = imageInputStream.readUnsignedInt();
         int day = imageInputStream.readUnsignedShort();
         long millis = imageInputStream.readUnsignedInt();

@@ -1,14 +1,18 @@
 <module>
     <manifestVersion>1.0.0</manifestVersion>
     <symbolicName>beam-metop-avhrr-reader</symbolicName>
-    <version>1.1</version>
+    <version>1.2</version>
     <name>MetOp-AVHRR Product Reader</name>
 
     <description>
         A product reader for MetOp-AVHRR files.
     </description>
     <changelog>
-        <![CDATA[From 1.0 to 1.1<br>
+        <![CDATA[From 1.1 to 1.2<br>
+        <ul>
+        <li>[BEAM-716] METOP AVHRR reader should detect reader qualification better</li>
+        </ul>
+        From 1.0 to 1.1<br>
         <ul>
         <li>[BEAM-537] Port METOP-AVHRR reader from BEAM 3.7</li>
         <li>[BEAM-714] Read cloud band from METOP products</li>

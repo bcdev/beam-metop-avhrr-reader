@@ -10,7 +10,7 @@
     <changelog>
         <![CDATA[From 1.1 to 1.2<br>
         <ul>
-        <li>[BEAM-716] METOP AVHRR reader should detect reader qualification better</li>
+        <li>[BEAM-741] METOP AVHRR reader should detect reader qualification better</li>
         </ul>
         From 1.0 to 1.1<br>
         <ul>

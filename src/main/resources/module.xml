@@ -1,14 +1,18 @@
 <module>
     <manifestVersion>1.0.0</manifestVersion>
     <symbolicName>beam-metop-avhrr-reader</symbolicName>
-    <version>1.2</version>
+    <version>1.3-SNAPSHOT</version>
     <name>MetOp-AVHRR Product Reader</name>
 
     <description>
         A product reader for MetOp-AVHRR files.
     </description>
     <changelog>
-        <![CDATA[From 1.1 to 1.2<br>
+        <![CDATA[From 1.2 to 1.3<br>
+        <ul>
+        <li>[BEAM-764] METOP AVHRR product have start and stop time from parent product</li>
+        </ul>
+        From 1.1 to 1.2<br>
         <ul>
         <li>[BEAM-741] METOP AVHRR reader should detect reader qualification better</li>
         </ul>

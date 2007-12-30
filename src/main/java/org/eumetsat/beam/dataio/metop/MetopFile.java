@@ -81,6 +81,10 @@ public class MetopFile extends AvhrrFile {
     private int mdrSize;
 
     private int numNavPoints;
+    
+    private UTC startTime;
+    
+    private UTC endTime;
 
     private MetadataElement geadrMetadata;
 
@@ -190,12 +194,12 @@ public class MetopFile extends AvhrrFile {
 
     @Override
     public UTC getStartDate() {
-        return mphrHeader.recordStartTime;
+        return startTime;
     }
 
     @Override
     public UTC getEndDate() {
-        return mphrHeader.recordEndTime;
+        return endTime;
     }
 
     @Override
@@ -377,6 +381,7 @@ public class MetopFile extends AvhrrFile {
                 throw new IllegalArgumentException("Bad GRH in first MDR.");
             }
         }
+        startTime = firstMdr.recordStartTime;
         mdrSize = (int) firstMdr.recordSize;
 
         final long fileSize = inputStream.length();
@@ -384,5 +389,14 @@ public class MetopFile extends AvhrrFile {
         if (fileSize != expectedFileSize) {
             productHeight = (int) ((fileSize - firstMdrOffset)/mdrSize);
         }
+        GenericRecordHeader lastMdr = new GenericRecordHeader();
+        synchronized (inputStream) {
+            inputStream.seek(firstMdrOffset + ((productHeight - 1) * mdrSize));
+            boolean correct = lastMdr.readGenericRecordHeader(inputStream);
+            if (!correct) {
+                throw new IllegalArgumentException("Bad GRH in last MDR.");
+            }
+        }
+        endTime = lastMdr.recordEndTime;
     }
 }

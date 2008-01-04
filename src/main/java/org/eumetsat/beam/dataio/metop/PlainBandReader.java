@@ -131,7 +131,7 @@ class PlainBandReader implements BandReader {
         return metopFile.getScanLineOffset(sourceY)
                 + 24
                 + (AvhrrConstants.RAW_SCENE_RASTER_WIDTH * AvhrrConstants.CH_DATASET_INDEXES[channel] * 2)
-                + ((AvhrrConstants.TP_TRIM_X + sourceOffsetX) * 2);
+                + ((metopFile.getNumTrimX() + sourceOffsetX) * 2);
     }
 
     protected boolean isVisibleBand() {

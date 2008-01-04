@@ -19,7 +19,6 @@
 package org.eumetsat.beam.dataio.metop;
 
 import com.bc.ceres.core.ProgressMonitor;
-import org.esa.beam.dataio.avhrr.AvhrrConstants;
 import org.esa.beam.dataio.avhrr.AvhrrFile;
 import org.esa.beam.dataio.avhrr.BandReader;
 import org.esa.beam.framework.datamodel.ProductData;
@@ -35,13 +34,13 @@ import java.text.MessageFormat;
  */
 class CloudBandReader implements BandReader {
 
-    protected AvhrrFile avhrrFile;
+    protected MetopFile metopFile;
 
     protected final ImageInputStream inputStream;
 
-    public CloudBandReader(AvhrrFile avhrrFile,
+    public CloudBandReader(MetopFile metopFile,
                            ImageInputStream inputStream) {
-        this.avhrrFile = avhrrFile;
+        this.metopFile = metopFile;
         this.inputStream = inputStream;
     }
 
@@ -74,7 +73,7 @@ class CloudBandReader implements BandReader {
                                    final ProductData destBuffer,
                                    final ProgressMonitor pm) throws IOException {
         
-        AvhrrFile.RawCoordinates rawCoord = avhrrFile.getRawCoordiantes(
+        AvhrrFile.RawCoordinates rawCoord = metopFile.getRawCoordiantes(
                 sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight);
         final short[] targetData = (short[]) destBuffer.getElems();
 
@@ -100,13 +99,8 @@ class CloudBandReader implements BandReader {
     }
 
     protected int getDataOffset(int sourceOffsetX, int sourceY) {
-        return avhrrFile.getScanLineOffset(sourceY)
+        return metopFile.getScanLineOffset(sourceY)
                 + 22472
-                + ((AvhrrConstants.TP_TRIM_X + sourceOffsetX) * 2);
+                + ((metopFile.getNumTrimX() + sourceOffsetX) * 2);
     }
-
-    private static String format(String pattern, String arg) {
-        return new MessageFormat(pattern).format(new Object[]{arg});
-    }
-
 }

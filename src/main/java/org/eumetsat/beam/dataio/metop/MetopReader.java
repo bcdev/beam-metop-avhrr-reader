@@ -117,7 +117,7 @@ public class MetopReader extends AvhrrReader implements AvhrrConstants {
 
     @Override
     protected void addCloudBand() {
-        BandReader cloudReader = new CloudBandReader(avhrrFile,imageInputStream);
+        BandReader cloudReader = new CloudBandReader((MetopFile) avhrrFile,imageInputStream);
         Band cloudBand = new Band(cloudReader.getBandName(),
                         cloudReader.getDataType(), avhrrFile.getProductWidth(),
                         avhrrFile.getProductHeight());

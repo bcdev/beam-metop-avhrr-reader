@@ -49,6 +49,14 @@ public class MetopFile extends AvhrrFile {
 
     private static final int LOW_PRECISION_SAMPLE_RATE = 40;
 
+    private static final int LOW_PRECISION_TRIM_X = 25;
+
+    private static final int HIGH_PRECISION_TRIM_X = 5;
+
+    private static final int LOW_PRECISION_PRODUCT_WIDTH = 2001;
+
+    private static final int HIGH_PRECISION_PRODUCT_WIDTH = 2041;
+
     private static final int LOW_PRECISION_TIE_POINT_WIDTH = 51;
 
     private static final int HIGH_PRECISION_TIE_POINT_WIDTH = 103;
@@ -61,10 +69,10 @@ public class MetopFile extends AvhrrFile {
 
     private static final int TIE_POINT_OFFSET = 20556;
 
+
     private static final int FLAG_OFFSET = 22204;
 
     private static final int FRAME_INDICATOR_OFFSET = 26580;
-
 
     private final ImageInputStream inputStream;
 
@@ -81,11 +89,11 @@ public class MetopFile extends AvhrrFile {
     private int mdrSize;
 
     private int numNavPoints;
-    
-    private UTC startTime;
-    
-    private UTC endTime;
 
+    private int numTrimX;
+
+    private UTC startTime;
+    private UTC endTime;
     private MetadataElement geadrMetadata;
 
     public MetopFile(ImageInputStream imageInputStream) {
@@ -135,8 +143,12 @@ public class MetopFile extends AvhrrFile {
         final int navSampleRate = secondaryProductHeaderRecord.getIntValue("NAV_SAMPLE_RATE");
         if (navSampleRate == LOW_PRECISION_SAMPLE_RATE) {
             numNavPoints = LOW_PRECISION_TIE_POINT_WIDTH;
+            numTrimX = LOW_PRECISION_TRIM_X;
+            productWidth = LOW_PRECISION_PRODUCT_WIDTH;
         } else if (navSampleRate == HIGH_PRECISION_SAMPLE_RATE) {
             numNavPoints = HIGH_PRECISION_TIE_POINT_WIDTH;
+            numTrimX = HIGH_PRECISION_TRIM_X;
+            productWidth = HIGH_PRECISION_PRODUCT_WIDTH;
         } else {
             throw new IOException("Unsupported product: bad SPHR. " +
                     "NAV_SAMPLE_RATE is: " + navSampleRate);
@@ -163,9 +175,9 @@ public class MetopFile extends AvhrrFile {
                 inputStream.seek(ipr.targetRecordOffset);
                 GenericRecordHeader grh = new GenericRecordHeader();
                 grh.readGenericRecordHeader(inputStream);
-                byte[] geadrText= new byte[100];
+                byte[] geadrText = new byte[100];
                 inputStream.read(geadrText);
-                
+
                 if (geadrMetadata == null) {
                     geadrMetadata = new MetadataElement("GEADR");
                 }
@@ -176,7 +188,6 @@ public class MetopFile extends AvhrrFile {
             }
         }
         productHeight = mainProductHeaderRecord.getIntValue("TOTAL_MDR");
-        productWidth = AvhrrConstants.SCENE_RASTER_WIDTH;
         checkMdrs();
         analyzeFrameIndicator();
 
@@ -209,7 +220,7 @@ public class MetopFile extends AvhrrFile {
         metaDataList.add(mainProductHeaderRecord.getMetaData());
         metaDataList.add(secondaryProductHeaderRecord.getMetaData());
         if (geadrMetadata != null) {
-            metaDataList.add(geadrMetadata);    
+            metaDataList.add(geadrMetadata);
         }
         metaDataList.add(giadrRadiance.getMetaData());
         return metaDataList;
@@ -231,18 +242,16 @@ public class MetopFile extends AvhrrFile {
                 giadrRadiance.getEquivalentWidth(channel), giadrRadiance
                 .getSolarIrradiance(channel), 1);
         //TODO this 1 should be the earth-sun-distance-ratio, but this ratio is always 0.
-        return new CalibratedBandReader(channel, this, inputStream,
-                                        radianceCalibrator);
+        return new CalibratedBandReader(channel, this, inputStream, radianceCalibrator);
     }
 
     @Override
     public BandReader createIrTemperatureBandReader(int channel) {
         RadianceCalibrator radianceCalibrator = new Radiance2TemperatureCalibrator(
-                giadrRadiance.getConstant1(channel), giadrRadiance
-                .getConstant2(channel), giadrRadiance
-                .getCentralWavenumber(channel));
-        return new CalibratedBandReader(channel, this, inputStream,
-                                        radianceCalibrator);
+                giadrRadiance.getConstant1(channel), giadrRadiance.getConstant2(channel),
+                giadrRadiance.getCentralWavenumber(channel));
+
+        return new CalibratedBandReader(channel, this, inputStream, radianceCalibrator);
     }
 
     public int getNumNavPoints() {
@@ -251,6 +260,10 @@ public class MetopFile extends AvhrrFile {
 
     public int getNavSampleRate() {
         return secondaryProductHeaderRecord.getIntValue("NAV_SAMPLE_RATE");
+    }
+
+    public int getNumTrimX() {
+        return numTrimX;
     }
 
     @Override
@@ -264,8 +277,7 @@ public class MetopFile extends AvhrrFile {
     @Override
     public float[][] getTiePointData() throws IOException {
         final int navSampleRate = getNavSampleRate();
-        final int gridHeight = getProductHeight()
-                / navSampleRate + 1;
+        final int gridHeight = getProductHeight() / navSampleRate + 1;
         final int numNavPoints = getNumNavPoints();
         final int numTiePoints = numNavPoints * gridHeight;
 
@@ -294,6 +306,7 @@ public class MetopFile extends AvhrrFile {
 
                 tiePointData[4][targetIndex] = rawLatLon[scanPoint * 2] * 1E-4f;
                 tiePointData[5][targetIndex] = rawLatLon[scanPoint * 2 + 1] * 1E-4f;
+
                 targetIndex += targetIncr;
             }
         }
@@ -333,7 +346,7 @@ public class MetopFile extends AvhrrFile {
             GenericRecordHeader mphrHeader = new GenericRecordHeader();
             boolean correct = mphrHeader.readGenericRecordHeader(inputStream);
             // check for MPHR
-            if (!correct 
+            if (!correct
                     || mphrHeader.recordClass != GenericRecordHeader.RecordClass.MPHR
                     || mphrHeader.instrumentGroup != GenericRecordHeader.InstrumentGroup.GENERIC
                     || mphrHeader.recordSubclass != 0) {
@@ -345,7 +358,7 @@ public class MetopFile extends AvhrrFile {
             correct = sphrHeader.readGenericRecordHeader(inputStream);
 
             // check for SPHR and AVHRR/3
-            if (correct 
+            if (correct
                     && sphrHeader.recordClass == GenericRecordHeader.RecordClass.SPHR
                     && sphrHeader.instrumentGroup == GenericRecordHeader.InstrumentGroup.AVHRR_3
                     && sphrHeader.recordSubclass == 0) {
@@ -387,7 +400,7 @@ public class MetopFile extends AvhrrFile {
         final long fileSize = inputStream.length();
         final long expectedFileSize = firstMdrOffset + (productHeight * mdrSize);
         if (fileSize != expectedFileSize) {
-            productHeight = (int) ((fileSize - firstMdrOffset)/mdrSize);
+            productHeight = (int) ((fileSize - firstMdrOffset) / mdrSize);
         }
         GenericRecordHeader lastMdr = new GenericRecordHeader();
         synchronized (inputStream) {
@@ -399,4 +412,30 @@ public class MetopFile extends AvhrrFile {
         }
         endTime = lastMdr.recordEndTime;
     }
+
+    @Override
+    public RawCoordinates getRawCoordiantes(int sourceOffsetX,
+            int sourceOffsetY, int sourceWidth, int sourceHeight) {
+        RawCoordinates coordinates = new RawCoordinates();
+        if (northbound) {
+            coordinates.minX = productWidth - sourceOffsetX - sourceWidth;
+            coordinates.maxX = productWidth - sourceOffsetX - 1;
+            coordinates.minY = productHeight - sourceOffsetY - sourceHeight;
+            coordinates.maxY = productHeight - sourceOffsetY - 1;
+            coordinates.targetStart = sourceWidth * sourceHeight - 1;
+            coordinates.targetIncrement = -1;
+        } else {
+            coordinates.minX = sourceOffsetX;
+            coordinates.maxX = sourceOffsetX + sourceWidth - 1;
+            coordinates.minY = sourceOffsetY;
+            coordinates.maxY = sourceOffsetY + sourceHeight - 1;
+            coordinates.targetStart = 0;
+            coordinates.targetIncrement = 1;
+        }
+        coordinates.minX += numTrimX;
+        coordinates.maxX += numTrimX;
+        
+        return coordinates;
+    }
+
 }

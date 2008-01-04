@@ -37,15 +37,12 @@ import java.text.MessageFormat;
  */
 public class CalibratedBandReader extends PlainBandReader {
 
-    short[] radianceScanLine;
-
-    RadianceCalibrator calibrator;
+    private final RadianceCalibrator calibrator;
 
     public CalibratedBandReader(int channel, MetopFile metopFile,
                                 ImageInputStream inputStream, RadianceCalibrator radianceCalibrator) {
         super(channel, metopFile, inputStream);
         calibrator = radianceCalibrator;
-        radianceScanLine = new short[AvhrrConstants.SCENE_RASTER_WIDTH];
     }
 
     public String getBandName() {
@@ -68,12 +65,9 @@ public class CalibratedBandReader extends PlainBandReader {
 
     public String getBandDescription() {
         if (isVisibleBand()) {
-            return format(
-                    AvhrrConstants.REFLECTANCE_FACTOR_DESCRIPTION,
-                    AvhrrConstants.CH_STRINGS[channel]);
+            return format(AvhrrConstants.REFLECTANCE_FACTOR_DESCRIPTION, AvhrrConstants.CH_STRINGS[channel]);
         } else {
-            return format(AvhrrConstants.TEMPERATURE_DESCRIPTION,
-                          AvhrrConstants.CH_STRINGS[channel]);
+            return format(AvhrrConstants.TEMPERATURE_DESCRIPTION, AvhrrConstants.CH_STRINGS[channel]);
         }
     }
 
@@ -99,8 +93,7 @@ public class CalibratedBandReader extends PlainBandReader {
         final float[] targetData = (float[]) destBuffer.getElems();
         final float scalingFactor = super.getScalingFactor();
 
-        pm.beginTask(MessageFormat.format("Reading AVHRR band ''{0}''...", getBandName()),
-                     rawCoord.maxY - rawCoord.minY);
+        pm.beginTask(MessageFormat.format("Reading AVHRR band ''{0}''...", getBandName()), rawCoord.maxY - rawCoord.minY);
 
         int targetIdx = rawCoord.targetStart;
         for (int sourceY = rawCoord.minY; sourceY <= rawCoord.maxY; sourceY += sourceStepY) {
@@ -111,6 +104,7 @@ public class CalibratedBandReader extends PlainBandReader {
             if (hasData(sourceY)) {
                 final int dataOffset = getDataOffset(sourceOffsetX, sourceY);
                 synchronized (inputStream) {
+                    final short[] radianceScanLine = new short[metopFile.getProductWidth()];
                     inputStream.seek(dataOffset);
                     inputStream.readFully(radianceScanLine, 0, sourceWidth);
 

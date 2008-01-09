@@ -49,9 +49,9 @@ public class MetopFile extends AvhrrFile {
 
     private static final int LOW_PRECISION_SAMPLE_RATE = 40;
 
-    private static final int LOW_PRECISION_TRIM_X = 25;
+    private static final int LOW_PRECISION_TRIM_X = 24;
 
-    private static final int HIGH_PRECISION_TRIM_X = 5;
+    private static final int HIGH_PRECISION_TRIM_X = 4;
 
     private static final int LOW_PRECISION_PRODUCT_WIDTH = 2001;
 

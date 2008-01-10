@@ -95,9 +95,11 @@ public class MetopFile extends AvhrrFile {
     private UTC startTime;
     private UTC endTime;
     private MetadataElement geadrMetadata;
+    private MetadataElement readerInfo;
 
     public MetopFile(ImageInputStream imageInputStream) {
         this.inputStream = imageInputStream;
+        readerInfo = new MetadataElement("READER_INFO");
     }
 
     @Override
@@ -153,6 +155,15 @@ public class MetopFile extends AvhrrFile {
             throw new IOException("Unsupported product: bad SPHR. " +
                     "NAV_SAMPLE_RATE is: " + navSampleRate);
         }
+        readerInfo
+                .addAttribute(HeaderUtil
+                        .createAttribute("TRIM_LEFT", numTrimX, "pixel",
+                                "Number of pixel cut from the left of the product to match the tie-points."));
+        readerInfo
+                .addAttribute(HeaderUtil
+                        .createAttribute("TRIM_RIGHT", EXPECTED_PRODUCT_WIDTH
+                                - numTrimX - productWidth, "pixel",
+                                "Number of pixel cut from the right of the product to match the tie-points."));
 
         List<InternalPointerRecord> iprs = new ArrayList<InternalPointerRecord>();
         InternalPointerRecord internalPointerRecord;
@@ -195,6 +206,7 @@ public class MetopFile extends AvhrrFile {
         if (toSkip < 0) {
             toSkip += navSampleRate;
         }
+        readerInfo.addAttribute(HeaderUtil.createAttribute("TRIM_BOTTOM",toSkip, "pixel", "Number of lines cut from the end of the product to match the tie-points."));
         productHeight = productHeight - toSkip;
     }
 
@@ -223,6 +235,7 @@ public class MetopFile extends AvhrrFile {
             metaDataList.add(geadrMetadata);
         }
         metaDataList.add(giadrRadiance.getMetaData());
+        metaDataList.add(readerInfo);
         return metaDataList;
     }
 

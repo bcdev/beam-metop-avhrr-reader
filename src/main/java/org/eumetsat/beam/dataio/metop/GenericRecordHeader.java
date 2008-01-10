@@ -63,12 +63,19 @@ public class GenericRecordHeader {
         recordSubclass = imageInputStream.readByte();
         recordSubclassVersion = imageInputStream.readByte();
         recordSize = imageInputStream.readUnsignedInt();
+        
         int day = imageInputStream.readUnsignedShort();
         long millis = imageInputStream.readUnsignedInt();
-        recordStartTime = new UTC(day, (int) (millis / 1000), (int) (millis % 1000));
+        long seconds = millis / 1000;
+        long micros = (millis - seconds * 1000) * 1000;
+        recordStartTime = new UTC(day, (int) seconds, (int) micros);
+        
         day = imageInputStream.readUnsignedShort();
         millis = imageInputStream.readUnsignedInt();
-        recordEndTime = new UTC(day, (int) (millis / 1000), (int) (millis % 1000));
+        seconds = millis / 1000;
+        micros = (millis - seconds * 1000) * 1000;
+        recordEndTime = new UTC(day, (int) seconds, (int) micros);
+        
         return true;
     }
 

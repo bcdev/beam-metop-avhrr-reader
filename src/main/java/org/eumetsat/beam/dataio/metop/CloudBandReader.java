@@ -49,7 +49,7 @@ class CloudBandReader implements BandReader {
     }
 
     public String getBandName() {
-        return "cloudFlag";
+        return "cloud_flags";
     }
 
     public String getBandUnit() {

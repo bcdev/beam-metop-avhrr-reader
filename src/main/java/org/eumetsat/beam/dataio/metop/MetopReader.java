@@ -134,7 +134,7 @@ public class MetopReader extends AvhrrReader implements AvhrrConstants {
         addFlagAndBitmaskDef(fc, "t4_t5_test2", "T4-T5 test (0='test failed' or 'clear'; 1='cloudy')", 9);
         addFlagAndBitmaskDef(fc, "t4_t5_test1", "T4-T5 test (0 ='test failed' or 'cloudy', 1='clear')", 8);
         addFlagAndBitmaskDef(fc, "albedo_test2", "Albedo test (0='test failed' or 'clear'; 1='cloudy' or 'snow/ice covered')", 7);
-        addFlagAndBitmaskDef(fc, "albedo_test1", "Albedo test (0 ='test failed' or 'cloudy', 1=’clear’ or 'snow/ice covered')", 6);
+        addFlagAndBitmaskDef(fc, "albedo_test1", "Albedo test (0 ='test failed' or 'cloudy', 1='clear' or 'snow/ice covered')", 6);
         addFlagAndBitmaskDef(fc, "t4_test2", "T4 test (0='test failed' or 'clear'; 1='cloudy' or 'snow/ice covered')", 5);
         addFlagAndBitmaskDef(fc, "t4_test1", "T4 test (0 ='test failed' or 'cloudy', 1='clear' or 'snow/ice covered')", 4);
         

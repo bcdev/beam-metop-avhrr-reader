@@ -125,18 +125,18 @@ public class MetopReader extends AvhrrReader implements AvhrrConstants {
         FlagCoding fc = new FlagCoding(cloudReader.getBandName());
         fc.setDescription("Flag coding for CLOUD_INFORMATION");
 
-        addFlagAndBitmaskDef(fc, "uniformity_test2", "Uniformity test (0=’test failed’ or ‘clear’; 1=’cloudy’)", 15);
-        addFlagAndBitmaskDef(fc, "uniformity_test1", "Uniformity test (0 =’test failed’ or ‘cloudy’, 1=’clear’)", 14);
-        addFlagAndBitmaskDef(fc, "t3_t5_test2", "T3-T5 test (0=’test failed’ or ‘clear’; 1=’cloudy’)", 13);
-        addFlagAndBitmaskDef(fc, "t3_t5_test1", "T3-T5 test (0 =’test failed’ or ‘cloudy’, 1=’clear’)", 12);
-        addFlagAndBitmaskDef(fc, "t4_t3_test2", "T4-T3 test (0=’test failed’ or ‘clear’; 1=’cloudy’)", 11);
-        addFlagAndBitmaskDef(fc, "t4_t3_test1", "T4-T3 test (0 =’test failed’ or ‘cloudy’, 1=’clear’)", 10);
-        addFlagAndBitmaskDef(fc, "t4_t5_test2", "T4-T5 test (0=’test failed’ or ‘clear’; 1=’cloudy’)", 9);
-        addFlagAndBitmaskDef(fc, "t4_t5_test1", "T4-T5 test (0 =’test failed’ or ‘cloudy’, 1=’clear’)", 8);
-        addFlagAndBitmaskDef(fc, "albedo_test2", "Albedo test (0=’test failed’ or ‘clear’; 1=’cloudy’ or ‘snow/ice covered’)", 7);
-        addFlagAndBitmaskDef(fc, "albedo_test1", "Albedo test (0 =’test failed’ or ‘cloudy’, 1=’clear’ or ‘snow/ice covered’)", 6);
-        addFlagAndBitmaskDef(fc, "t4_test2", "T4 test (0=’test failed’ or ‘clear’; 1=’cloudy’ or ‘snow/ice covered’)", 5);
-        addFlagAndBitmaskDef(fc, "t4_test1", "T4 test (0 =’test failed’ or ‘cloudy’, 1=’clear’ or ‘snow/ice covered’)", 4);
+        addFlagAndBitmaskDef(fc, "uniformity_test2", "Uniformity test (0='test failed' or 'clear'; 1='cloudy')", 15);
+        addFlagAndBitmaskDef(fc, "uniformity_test1", "Uniformity test (0 ='test failed' or 'cloudy', 1='clear')", 14);
+        addFlagAndBitmaskDef(fc, "t3_t5_test2", "T3-T5 test (0='test failed' or 'clear'; 1='cloudy')", 13);
+        addFlagAndBitmaskDef(fc, "t3_t5_test1", "T3-T5 test (0 ='test failed' or 'cloudy', 1='clear')", 12);
+        addFlagAndBitmaskDef(fc, "t4_t3_test2", "T4-T3 test (0='test failed' or 'clear'; 1='cloudy')", 11);
+        addFlagAndBitmaskDef(fc, "t4_t3_test1", "T4-T3 test (0 ='test failed' or 'cloudy', 1='clear')", 10);
+        addFlagAndBitmaskDef(fc, "t4_t5_test2", "T4-T5 test (0='test failed' or 'clear'; 1='cloudy')", 9);
+        addFlagAndBitmaskDef(fc, "t4_t5_test1", "T4-T5 test (0 ='test failed' or 'cloudy', 1='clear')", 8);
+        addFlagAndBitmaskDef(fc, "albedo_test2", "Albedo test (0='test failed' or 'clear'; 1='cloudy' or 'snow/ice covered')", 7);
+        addFlagAndBitmaskDef(fc, "albedo_test1", "Albedo test (0 ='test failed' or 'cloudy', 1=’clear’ or 'snow/ice covered')", 6);
+        addFlagAndBitmaskDef(fc, "t4_test2", "T4 test (0='test failed' or 'clear'; 1='cloudy' or 'snow/ice covered')", 5);
+        addFlagAndBitmaskDef(fc, "t4_test1", "T4 test (0 ='test failed' or 'cloudy', 1='clear' or 'snow/ice covered')", 4);
         
         cloudBand.setFlagCoding(fc);
         product.addFlagCoding(fc);

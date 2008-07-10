@@ -44,7 +44,7 @@
             <class>org.esa.beam.visat.actions.ProductImportAction</class>
             <formatName>METOP_AVHRR_3_L1B</formatName>
             <useAllFileFilter>true</useAllFileFilter>
-            <text>Import MetOp-AVHRR/3 Level-1b Product (or Subset)...</text>
+            <text>Import MetOp-AVHRR/3 Level-1b Product...</text>
             <mnemonic></mnemonic>
             <shortDescr>Import a MetOp-AVHRR/3 Level-1b data product or product subset.</shortDescr>
             <description>Import a MetOp-AVHRR/3 Level-1b data product or product subset.</description>

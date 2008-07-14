@@ -35,6 +35,10 @@
     <dependency>
         <module>beam-avhrr-reader</module>
     </dependency>
+    <dependency>
+        <module>beam-visat</module>
+        <optional>true</optional>
+    </dependency>
 
     <categories>AVHRR,MetOp,Reader,VISAT</categories>
 

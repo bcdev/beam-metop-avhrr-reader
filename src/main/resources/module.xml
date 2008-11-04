@@ -5,7 +5,7 @@
     <name>MetOp-AVHRR Product Reader</name>
 
     <description>
-        A product reader for MetOp-AVHRR files.
+        A BEAM product reader for MetOp-AVHRR files.
     </description>
     <changelog>
         <![CDATA[From 1.2 to 1.3<br>

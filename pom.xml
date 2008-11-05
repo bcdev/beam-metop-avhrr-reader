@@ -7,8 +7,8 @@
     <version>1.3</version>
     <name>MetOp-AVHRR Product Reader</name>
     <url>http://maven.apache.org</url>
+    
     <dependencies>
-
         <dependency>
             <groupId>org.esa.beam</groupId>
             <artifactId>beam-core</artifactId>
@@ -29,6 +29,15 @@
             <scope>test</scope>
         </dependency>        
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>bc-public</id>
+            <name>Public Maven Repository at Brockmann-Consult</name>
+            <url></url>
+        </repository>
+    </distributionManagement>
+        
     <build>
         <plugins>
             <plugin>

@@ -18,7 +18,7 @@
         <dependency>
             <groupId>org.esa.beam</groupId>
             <artifactId>beam-avhrr-reader</artifactId>
-            <version>1.0</version>
+            <version>[1.0,1.0.999]</version>
             <scope>compile</scope>
         </dependency>
         

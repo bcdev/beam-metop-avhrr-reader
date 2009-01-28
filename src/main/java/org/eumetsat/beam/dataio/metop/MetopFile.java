@@ -199,20 +199,10 @@ public class MetopFile extends AvhrrFile {
             }
         }
         productHeight = mainProductHeaderRecord.getIntValue("TOTAL_MDR");
-        checkMdrs(navSampleRate);
+        int toSkip = checkMdrs(navSampleRate);
         analyzeFrameIndicator();
 
-        int toSkip = adjustProductHeight(navSampleRate);
         readerInfo.addAttribute(HeaderUtil.createAttribute("TRIM_BOTTOM",toSkip, "pixel", "Number of lines cut from the end of the product to match the tie-points."));
-    }
-
-    private int adjustProductHeight(int navSampleRate) {
-        int toSkip = (productHeight % navSampleRate) - 1;
-        if (toSkip < 0) {
-            toSkip += navSampleRate;
-        }
-        productHeight = productHeight - toSkip;
-        return toSkip;
     }
 
     @Override

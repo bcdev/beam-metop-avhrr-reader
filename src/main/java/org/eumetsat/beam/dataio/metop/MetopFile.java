@@ -199,15 +199,20 @@ public class MetopFile extends AvhrrFile {
             }
         }
         productHeight = mainProductHeaderRecord.getIntValue("TOTAL_MDR");
-        checkMdrs();
+        checkMdrs(navSampleRate);
         analyzeFrameIndicator();
 
+        int toSkip = adjustProductHeight(navSampleRate);
+        readerInfo.addAttribute(HeaderUtil.createAttribute("TRIM_BOTTOM",toSkip, "pixel", "Number of lines cut from the end of the product to match the tie-points."));
+    }
+
+    private int adjustProductHeight(int navSampleRate) {
         int toSkip = (productHeight % navSampleRate) - 1;
         if (toSkip < 0) {
             toSkip += navSampleRate;
         }
-        readerInfo.addAttribute(HeaderUtil.createAttribute("TRIM_BOTTOM",toSkip, "pixel", "Number of lines cut from the end of the product to match the tie-points."));
         productHeight = productHeight - toSkip;
+        return toSkip;
     }
 
     @Override
@@ -398,7 +403,7 @@ public class MetopFile extends AvhrrFile {
         }
     }
 
-    private void checkMdrs() throws IOException {
+    private int checkMdrs(int navSampleRate) throws IOException {
         GenericRecordHeader firstMdr = new GenericRecordHeader();
         synchronized (inputStream) {
             inputStream.seek(firstMdrOffset);
@@ -415,6 +420,11 @@ public class MetopFile extends AvhrrFile {
         if (fileSize != expectedFileSize) {
             productHeight = (int) ((fileSize - firstMdrOffset) / mdrSize);
         }
+        int toSkip = (productHeight % navSampleRate) - 1;
+        if (toSkip < 0) {
+            toSkip += navSampleRate;
+        }
+        productHeight = productHeight - toSkip;
         GenericRecordHeader lastMdr = new GenericRecordHeader();
         synchronized (inputStream) {
             inputStream.seek(firstMdrOffset + ((productHeight - 1) * mdrSize));
@@ -424,6 +434,8 @@ public class MetopFile extends AvhrrFile {
             }
         }
         endTime = lastMdr.recordEndTime;
+
+        return toSkip;
     }
 
     @Override

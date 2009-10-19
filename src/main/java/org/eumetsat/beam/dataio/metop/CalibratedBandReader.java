@@ -45,6 +45,7 @@ public class CalibratedBandReader extends PlainBandReader {
         calibrator = radianceCalibrator;
     }
 
+    @Override
     public String getBandName() {
         if (isVisibleBand()) {
             return AvhrrConstants.REFLECTANCE_BAND_NAME_PREFIX
@@ -55,6 +56,7 @@ public class CalibratedBandReader extends PlainBandReader {
         }
     }
 
+    @Override
     public String getBandUnit() {
         if (isVisibleBand()) {
             return AvhrrConstants.REFLECTANCE_UNIT;
@@ -63,6 +65,7 @@ public class CalibratedBandReader extends PlainBandReader {
         }
     }
 
+    @Override
     public String getBandDescription() {
         if (isVisibleBand()) {
             return format(AvhrrConstants.REFLECTANCE_FACTOR_DESCRIPTION, AvhrrConstants.CH_STRINGS[channel]);
@@ -71,14 +74,17 @@ public class CalibratedBandReader extends PlainBandReader {
         }
     }
 
+    @Override
     public float getScalingFactor() {
         return 1;
     }
 
+    @Override
     public int getDataType() {
         return ProductData.TYPE_FLOAT32;
     }
 
+    @Override
     public void readBandRasterData(int sourceOffsetX,
                                    int sourceOffsetY,
                                    int sourceWidth,

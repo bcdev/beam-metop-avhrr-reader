@@ -51,11 +51,13 @@ class PlainBandReader implements BandReader {
         this.inputStream = inputStream;
     }
 
+    @Override
     public String getBandName() {
         return AvhrrConstants.RADIANCE_BAND_NAME_PREFIX
                 + AvhrrConstants.CH_STRINGS[channel];
     }
 
+    @Override
     public String getBandUnit() {
         if (isVisibleBand()) {
             return VIS_RADIANCE_UNIT;
@@ -64,6 +66,7 @@ class PlainBandReader implements BandReader {
         }
     }
 
+    @Override
     public String getBandDescription() {
         if (isVisibleBand()) {
             return format(AvhrrConstants.RADIANCE_DESCRIPTION_VIS,
@@ -74,6 +77,7 @@ class PlainBandReader implements BandReader {
         }
     }
 
+    @Override
     public float getScalingFactor() {
         if (channel == AvhrrConstants.CH_3A || channel == AvhrrConstants.CH_3B) {
             return 1E-4f;
@@ -82,10 +86,12 @@ class PlainBandReader implements BandReader {
         }
     }
 
+    @Override
     public int getDataType() {
         return ProductData.TYPE_INT16;
     }
 
+    @Override
     public void readBandRasterData(int sourceOffsetX,
                                    int sourceOffsetY,
                                    int sourceWidth,

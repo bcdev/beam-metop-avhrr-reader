@@ -44,26 +44,32 @@ class CloudBandReader implements BandReader {
         this.inputStream = inputStream;
     }
 
+    @Override
     public String getBandDescription() {
         return "CLAVR-x cloud mask";
     }
 
+    @Override
     public String getBandName() {
         return "cloud_flags";
     }
 
+    @Override
     public String getBandUnit() {
         return null;
     }
 
+    @Override
     public int getDataType() {
         return ProductData.TYPE_UINT16;
     }
 
+    @Override
     public float getScalingFactor() {
         return 1f;
     }
 
+    @Override
     public void readBandRasterData(int sourceOffsetX,
                                    int sourceOffsetY,
                                    int sourceWidth,

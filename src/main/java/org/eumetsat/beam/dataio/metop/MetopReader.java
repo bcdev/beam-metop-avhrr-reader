@@ -21,24 +21,17 @@ package org.eumetsat.beam.dataio.metop;
 import org.esa.beam.dataio.avhrr.AvhrrConstants;
 import org.esa.beam.dataio.avhrr.AvhrrReader;
 import org.esa.beam.dataio.avhrr.BandReader;
-import org.esa.beam.dataio.avhrr.noaa.CloudReader;
-import org.esa.beam.dataio.avhrr.noaa.NoaaFile;
 import org.esa.beam.framework.dataio.IllegalFileFormatException;
 import org.esa.beam.framework.dataio.ProductReaderPlugIn;
 import org.esa.beam.framework.datamodel.Band;
-import org.esa.beam.framework.datamodel.BitmaskDef;
 import org.esa.beam.framework.datamodel.FlagCoding;
 import org.esa.beam.framework.datamodel.GeoCoding;
 import org.esa.beam.framework.datamodel.Product;
-import org.esa.beam.framework.datamodel.ProductData;
 import org.esa.beam.framework.datamodel.TiePointGeoCoding;
 import org.esa.beam.framework.datamodel.TiePointGrid;
-import org.esa.beam.framework.datamodel.VirtualBand;
 import org.esa.beam.framework.dataop.maptransf.Datum;
 
 import javax.imageio.stream.FileImageInputStream;
-
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 
@@ -138,8 +131,8 @@ public class MetopReader extends AvhrrReader implements AvhrrConstants {
         addFlagAndBitmaskDef(fc, "t4_test2", "T4 test (0='test failed' or 'clear'; 1='cloudy' or 'snow/ice covered')", 5);
         addFlagAndBitmaskDef(fc, "t4_test1", "T4 test (0 ='test failed' or 'cloudy', 1='clear' or 'snow/ice covered')", 4);
         
-        cloudBand.setFlagCoding(fc);
-        product.addFlagCoding(fc);
+        cloudBand.setSampleCoding(fc);
+        product.getFlagCodingGroup().add(fc);
         product.addBand(cloudBand);
         bandReaders.put(cloudBand, cloudReader);
     }

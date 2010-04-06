@@ -18,7 +18,6 @@
  */
 package org.eumetsat.beam.dataio.metop;
 
-import org.esa.beam.dataio.avhrr.HeaderUtil;
 import org.esa.beam.framework.datamodel.MetadataElement;
 
 /**
@@ -38,10 +37,9 @@ class SecondaryProductHeaderRecord extends AsciiRecord {
     @Override
     public MetadataElement getMetaData() {
         final MetadataElement element = new MetadataElement("SPH");
-        element.addAttribute(HeaderUtil.createAttribute("SRC_DATA_QUAL", getIntValue("SRC_DATA_QUAL")));
-
-        element.addAttribute(HeaderUtil.createAttribute("EARTH_VIEWS_PER_SCANLINE", getIntValue("EARTH_VIEWS_PER_SCANLINE")));
-        element.addAttribute(HeaderUtil.createAttribute("NAV_SAMPLE_RATE", getIntValue("NAV_SAMPLE_RATE")));
+        element.addAttribute(createIntAttribute("SRC_DATA_QUAL", null));
+        element.addAttribute(createIntAttribute("EARTH_VIEWS_PER_SCANLINE", null));
+        element.addAttribute(createIntAttribute("NAV_SAMPLE_RATE", null));
         return element;
     }
 }

@@ -127,65 +127,31 @@ class GiadrRadiance {
     }
 
     public MetadataElement getMetaData() {
-        final MetadataElement element = new MetadataElement(
-                "RADIANCE_CONVERSION");
-        element.addAttribute(HeaderUtil.createAttribute(
-                "RAMP_CALIBRATION_COEFFICIENT", rampCalibrationCoefficient));
-        element.addAttribute(HeaderUtil.createAttribute(
-                "YEAR_RECENT_CALIBRATION", yearRecentCalibration,
-                AvhrrConstants.UNIT_YEARS));
-        element.addAttribute(HeaderUtil.createAttribute(
-                "DAY_RECENT_CALIBRATION", dayRecentCalibration,
-                AvhrrConstants.UNIT_DAYS));
-        element.addAttribute(HeaderUtil.createAttribute(
-                "PRIMARY_CALIBRATION_ALGORITHM_ID",
-                primaryCalibrationAlgorithmId));
-        element.addAttribute(HeaderUtil.createAttribute(
-                "PRIMARY_CALIBRATION_ALGORITHM_OPTION",
-                primaryCalibrationAlgorithmOption));
-        element.addAttribute(HeaderUtil.createAttribute(
-                "SECONDARY_CALIBRATION_ALGORITHM_ID",
-                secondaryCalibrationAlgorithmId));
-        element.addAttribute(HeaderUtil.createAttribute(
-                "SECONDARY_CALIBRATION_ALGORITHM_OPTION",
-                secondaryCalibrationAlgorithmOption));
+        final MetadataElement element = new MetadataElement("RADIANCE_CONVERSION");
+        element.addAttribute(HeaderUtil.createAttribute("RAMP_CALIBRATION_COEFFICIENT", rampCalibrationCoefficient));
+        element.addAttribute(HeaderUtil.createAttribute("YEAR_RECENT_CALIBRATION", yearRecentCalibration, AvhrrConstants.UNIT_YEARS));
+        element.addAttribute(HeaderUtil.createAttribute("DAY_RECENT_CALIBRATION", dayRecentCalibration, AvhrrConstants.UNIT_DAYS));
+        element.addAttribute(HeaderUtil.createAttribute("PRIMARY_CALIBRATION_ALGORITHM_ID", primaryCalibrationAlgorithmId));
+        element.addAttribute(HeaderUtil.createAttribute("PRIMARY_CALIBRATION_ALGORITHM_OPTION", primaryCalibrationAlgorithmOption));
+        element.addAttribute(HeaderUtil.createAttribute("SECONDARY_CALIBRATION_ALGORITHM_ID", secondaryCalibrationAlgorithmId));
+        element.addAttribute(HeaderUtil.createAttribute("SECONDARY_CALIBRATION_ALGORITHM_OPTION", secondaryCalibrationAlgorithmOption));
         for (int i = 0; i < 4; i++) {
-            element.addAttribute(HeaderUtil.createAttribute("IR_TEMPERATURE"
-                    + (i + 1) + "_COEFFICIENT1", (float) irTempCoeff1[i], "K"));
-            element.addAttribute(HeaderUtil.createAttribute("IR_TEMPERATURE"
-                    + (i + 1) + "_COEFFICIENT2", (float) irTempCoeff2[i],
-                                                 "K/cnt"));
-            element.addAttribute(HeaderUtil.createAttribute("IR_TEMPERATURE"
-                    + (i + 1) + "_COEFFICIENT3", (float) irTempCoeff3[i],
-                                                 "K/cnt^2"));
-            element.addAttribute(HeaderUtil.createAttribute("IR_TEMPERATURE"
-                    + (i + 1) + "_COEFFICIENT4", (float) irTempCoeff4[i],
-                                                 "K/cnt^3"));
-            element.addAttribute(HeaderUtil.createAttribute("IR_TEMPERATURE"
-                    + (i + 1) + "_COEFFICIENT5", (float) irTempCoeff5[i],
-                                                 "K/cnt^4"));
-            element.addAttribute(HeaderUtil.createAttribute("IR_TEMPERATURE"
-                    + (i + 1) + "_COEFFICIENT6", (float) irTempCoeff6[i],
-                                                 "K/cnt^5"));
+            element.addAttribute(HeaderUtil.createAttribute("IR_TEMPERATURE" + (i + 1) + "_COEFFICIENT1", (float) irTempCoeff1[i], "K"));
+            element.addAttribute(HeaderUtil.createAttribute("IR_TEMPERATURE" + (i + 1) + "_COEFFICIENT2", (float) irTempCoeff2[i], "K/cnt"));
+            element.addAttribute(HeaderUtil.createAttribute("IR_TEMPERATURE" + (i + 1) + "_COEFFICIENT3", (float) irTempCoeff3[i], "K/cnt^2"));
+            element.addAttribute(HeaderUtil.createAttribute("IR_TEMPERATURE" + (i + 1) + "_COEFFICIENT4", (float) irTempCoeff4[i], "K/cnt^3"));
+            element.addAttribute(HeaderUtil.createAttribute("IR_TEMPERATURE" + (i + 1) + "_COEFFICIENT5", (float) irTempCoeff5[i], "K/cnt^4"));
+            element.addAttribute(HeaderUtil.createAttribute("IR_TEMPERATURE" + (i + 1) + "_COEFFICIENT6", (float) irTempCoeff6[i], "K/cnt^5"));
         }
 
         for (int i = 0; i < 3; i++) {
-            element.addAttribute(HeaderUtil.createAttribute(getNamePrefix(i)
-                    + "SOLAR_FILTERED_IRRADIANCE", solarFilteredIrradiance[i],
-                                                   "W/m^2"));
-            element.addAttribute(HeaderUtil.createAttribute(getNamePrefix(i)
-                    + "EQUIVALENT_FILTER_WIDTH", equivalentFilteredWidth[i],
-                                                 "m^-6"));
+            element.addAttribute(HeaderUtil.createAttribute(getNamePrefix(i) + "SOLAR_FILTERED_IRRADIANCE", solarFilteredIrradiance[i], "W/m^2"));
+            element.addAttribute(HeaderUtil.createAttribute(getNamePrefix(i) + "EQUIVALENT_FILTER_WIDTH", equivalentFilteredWidth[i], "m^-6"));
         }
         for (int i = 0; i < 3; i++) {
-            element.addAttribute(HeaderUtil.createAttribute(
-                    getNamePrefix(i + 3) + "CENTRAL_WAVE_NUMBER",
-                    centralWavenumber[i], "cm^-1"));
-            element.addAttribute(HeaderUtil.createAttribute(
-                    getNamePrefix(i + 3) + "CONSTANT1", constant1[i], "K"));
-            element.addAttribute(HeaderUtil.createAttribute(
-                    getNamePrefix(i + 3) + "CONSTANT2_SLOPE",
-                    constant2Slope[i], "K/K"));
+            element.addAttribute(HeaderUtil.createAttribute(getNamePrefix(i + 3) + "CENTRAL_WAVE_NUMBER", centralWavenumber[i], "cm^-1"));
+            element.addAttribute(HeaderUtil.createAttribute(getNamePrefix(i + 3) + "CONSTANT1", constant1[i], "K"));
+            element.addAttribute(HeaderUtil.createAttribute(getNamePrefix(i + 3) + "CONSTANT2_SLOPE", constant2Slope[i], "K/K"));
         }
         return element;
     }

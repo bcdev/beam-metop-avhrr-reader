@@ -18,10 +18,16 @@
  */
 package org.eumetsat.beam.dataio.metop;
 
+import org.esa.beam.dataio.avhrr.AvhrrConstants;
+import org.esa.beam.dataio.avhrr.HeaderUtil;
+import org.esa.beam.framework.datamodel.MetadataAttribute;
 import org.esa.beam.framework.datamodel.MetadataElement;
+import org.esa.beam.framework.datamodel.ProductData;
 
 import javax.imageio.stream.ImageInputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -81,5 +87,57 @@ public abstract class AsciiRecord {
         for (final String key : keys) {
             System.out.println(key + "=" + map.get(key));
         }
+    }
+
+    MetadataAttribute createStringAttribute(String key, String unit) {
+        String stringValue = getValue(key);
+        if (stringValue != null) {
+            return HeaderUtil.createAttribute(key, stringValue, unit);
+        } else {
+            return null;
+        }
+    }
+
+    MetadataAttribute createFloatAttribute(String key, float scalingFactor, String unit) {
+        String stringValue = getValue(key);
+        if (stringValue != null) {
+            try {
+                final long longValue = Long.parseLong(stringValue);
+                return HeaderUtil.createAttribute(key, longValue * scalingFactor, unit);
+            } catch (NumberFormatException e) {
+                return HeaderUtil.createAttribute(key, stringValue, unit);
+            }
+        } else {
+            return null;
+        }
+    }
+
+    MetadataAttribute createIntAttribute(String key, String unit) {
+        String stringValue = getValue(key);
+        if (stringValue != null) {
+            try {
+                final int intValue = Integer.parseInt(stringValue);
+                return HeaderUtil.createAttribute(key, intValue, unit);
+            } catch (NumberFormatException e) {
+                return HeaderUtil.createAttribute(key, stringValue, unit);
+            }
+        } else {
+            return null;
+        }
+    }
+
+    MetadataAttribute createDateAttribute(String key, DateFormat dateFormat) {
+        final String dateString = getValue(key);
+        MetadataAttribute attribute;
+        try {
+            final Date date = dateFormat.parse(dateString);
+            ProductData.UTC utc = ProductData.UTC.create(date, 0);
+            attribute = new MetadataAttribute(key, utc, true);
+        } catch (ParseException e) {
+            ProductData data = ProductData.createInstance(dateString);
+            attribute = new MetadataAttribute(key, data, true);
+        }
+        attribute.setUnit(AvhrrConstants.UNIT_DATE);
+        return attribute;
     }
 }

@@ -35,7 +35,7 @@ import java.text.MessageFormat;
  * @author marcoz
  * @version $Revision: 1.1.1.1 $ $Date: 2007/03/22 11:12:51 $
  */
-public class CalibratedBandReader extends PlainBandReader {
+class CalibratedBandReader extends PlainBandReader {
 
     private final RadianceCalibrator calibrator;
 

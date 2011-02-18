@@ -21,6 +21,7 @@ package org.eumetsat.beam.dataio.metop;
 import org.esa.beam.dataio.avhrr.AvhrrConstants;
 import org.esa.beam.dataio.avhrr.AvhrrFile;
 import org.esa.beam.dataio.avhrr.BandReader;
+import org.esa.beam.dataio.avhrr.FlagReader;
 import org.esa.beam.dataio.avhrr.HeaderUtil;
 import org.esa.beam.dataio.avhrr.calibration.Radiance2ReflectanceFactorCalibrator;
 import org.esa.beam.dataio.avhrr.calibration.Radiance2TemperatureCalibrator;
@@ -41,7 +42,7 @@ import java.util.List;
  * @author marcoz
  * @version $Revision: 1.1.1.1 $ $Date: 2007/03/22 11:12:51 $
  */
-public class MetopFile extends AvhrrFile {
+class MetopFile extends AvhrrFile {
 
     private static final int EXPECTED_PRODUCT_WIDTH = 2048;
 
@@ -74,7 +75,7 @@ public class MetopFile extends AvhrrFile {
 
     private static final int FRAME_INDICATOR_OFFSET = 26580;
 
-    private final ImageInputStream inputStream;
+    private ImageInputStream inputStream;
 
     private GenericRecordHeader mphrHeader;
 
@@ -221,17 +222,14 @@ public class MetopFile extends AvhrrFile {
     }
 
     @Override
-    public List getMetaData() {
-        List<MetadataElement> metaDataList = new ArrayList<MetadataElement>();
-
-        metaDataList.add(mainProductHeaderRecord.getMetaData());
-        metaDataList.add(secondaryProductHeaderRecord.getMetaData());
+    public void addMetaData(MetadataElement metadataRoot) {
+        metadataRoot.addElement(mainProductHeaderRecord.getMetaData());
+        metadataRoot.addElement(secondaryProductHeaderRecord.getMetaData());
         if (geadrMetadata != null) {
-            metaDataList.add(geadrMetadata);
+            metadataRoot.addElement(geadrMetadata);
         }
-        metaDataList.add(giadrRadiance.getMetaData());
-        metaDataList.add(readerInfo);
-        return metaDataList;
+        metadataRoot.addElement(giadrRadiance.getMetaData());
+        metadataRoot.addElement(readerInfo);
     }
 
     @Override
@@ -260,6 +258,21 @@ public class MetopFile extends AvhrrFile {
                 giadrRadiance.getCentralWavenumber(channel));
 
         return new CalibratedBandReader(channel, this, inputStream, radianceCalibrator);
+    }
+
+    @Override
+    public BandReader createFlagBandReader() {
+        return new FlagReader(this, inputStream);
+    }
+
+    @Override
+    public boolean hasCloudBand() {
+        return true;
+    }
+
+    @Override
+    public BandReader createCloudBandReader() {
+        return new CloudBandReader(this, inputStream);
     }
 
     public int getNumNavPoints() {
@@ -335,7 +348,17 @@ public class MetopFile extends AvhrrFile {
         return flagOffset;
     }
 
-    public int readFrameIndicator(int rawY) throws IOException {
+    @Override
+    public int getTiePointTrimX() {
+        return AvhrrConstants.TP_TRIM_X;
+    }
+
+    @Override
+    public int getTiePointSupsampling() {
+        return AvhrrConstants.TP_SUB_SAMPLING_X;
+    }
+
+    int readFrameIndicator(int rawY) throws IOException {
         int flagOffset = getScanLineOffset(rawY) + FRAME_INDICATOR_OFFSET + 1;
         if (numNavPoints == LOW_PRECISION_TIE_POINT_WIDTH) {
             flagOffset = flagOffset - TIE_POINT_DIFFERENCE;
@@ -451,6 +474,14 @@ public class MetopFile extends AvhrrFile {
         coordinates.maxX += numTrimX;
         
         return coordinates;
+    }
+
+    @Override
+    public void dispose() throws IOException {
+        if (inputStream != null) {
+            inputStream.close();
+            inputStream = null;
+        }
     }
 
 }

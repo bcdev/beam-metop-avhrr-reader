@@ -36,7 +36,7 @@ import java.util.*;
  * @author marcoz
  * @version $Revision: 1.1.1.1 $ $Date: 2007/03/22 11:12:51 $
  */
-public abstract class AsciiRecord {
+abstract class AsciiRecord {
 
     private Map<String, String> map;
     private int fieldCount;

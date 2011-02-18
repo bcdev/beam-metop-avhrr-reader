@@ -32,7 +32,7 @@ import java.text.SimpleDateFormat;
  * @author marcoz
  * @version $Revision: 1.1.1.1 $ $Date: 2007/03/22 11:12:51 $
  */
-public class MainProductHeaderRecord extends AsciiRecord {
+class MainProductHeaderRecord extends AsciiRecord {
     private static final int NUM_FIELDS = 72;
     private static final DateFormat generalTimeFormat = new SimpleDateFormat("yyyyMMddHHmmss'Z'");
     private static final DateFormat longGeneralTimeFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS'Z'");

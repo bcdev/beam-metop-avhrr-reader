@@ -32,7 +32,7 @@ import java.io.IOException;
  * @author marcoz
  * @version $Revision: 1.1.1.1 $ $Date: 2007/03/22 11:12:51 $
  */
-public class InternalPointerRecord {
+class InternalPointerRecord {
 
     GenericRecordHeader header;
 

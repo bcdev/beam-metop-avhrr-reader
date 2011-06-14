@@ -7,7 +7,7 @@
     <version>1.5.2</version>
     <name>MetOp-AVHRR Product Reader</name>
     <url>http://maven.apache.org</url>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.esa.beam</groupId>
@@ -20,7 +20,7 @@
             <artifactId>junit</artifactId>
             <version>4.4</version>
             <scope>test</scope>
-        </dependency>        
+        </dependency>
     </dependencies>
 
     <repositories>
@@ -40,20 +40,20 @@
     </repositories>
 
     <distributionManagement>
-       <repository>
-           <id>bc-mvn-repo-public</id>
-           <name>Public Maven Repository at Brockmann Consult</name>
-           <url>scp://www.brockmann-consult.de/var/www/www.brockmann-consult.de/mvn/os</url>
-           <uniqueVersion>false</uniqueVersion>
-       </repository>
-       <snapshotRepository>
-           <id>bc-mvn-repo-public</id>
-           <name>Public Maven Snapshot Repository at Brockmann Consult</name>
-           <url>scp://www.brockmann-consult.de/var/www/www.brockmann-consult.de/mvn/os</url>
-           <uniqueVersion>false</uniqueVersion>
-       </snapshotRepository>
-   </distributionManagement>
-    
+        <repository>
+            <id>bc-mvn-repo-public</id>
+            <name>Public Maven Repository at Brockmann Consult</name>
+            <url>scp://www.brockmann-consult.de/var/www/www.brockmann-consult.de/mvn/os</url>
+            <uniqueVersion>false</uniqueVersion>
+        </repository>
+        <snapshotRepository>
+            <id>bc-mvn-repo-public</id>
+            <name>Public Maven Snapshot Repository at Brockmann Consult</name>
+            <url>scp://www.brockmann-consult.de/var/www/www.brockmann-consult.de/mvn/os</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -72,7 +72,16 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>1.0-beta-7</version>
+            </extension>
+        </extensions>
     </build>
+
     <developers>
         <developer>
             <id>marcoz</id>

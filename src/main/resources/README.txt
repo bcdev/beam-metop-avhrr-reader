@@ -22,10 +22,6 @@ Introduction
 This file briefly describes the installation and use of the MetopReader 
 BEAM4 plug-in.
 
-Changelog
----------
-March 22, 2007 --- Version 1.0-SNAPSHOT
--> Migration of the MetopReader to BEAM4.
 
 Requirements
 ------------

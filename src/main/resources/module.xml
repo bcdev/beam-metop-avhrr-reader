@@ -1,8 +1,9 @@
 <module>
     <manifestVersion>1.0.0</manifestVersion>
     <symbolicName>beam-metop-avhrr-reader</symbolicName>
-    <version>1.5.2</version>
+    <version>1.5.3</version>
     <name>MetOp-AVHRR Product Reader</name>
+    <funding>EUMETSAT</funding>
 
     <description>
         <![CDATA[
@@ -67,7 +68,7 @@
             <class>org.esa.beam.visat.actions.ProductImportAction</class>
             <formatName>METOP_AVHRR_3_L1B</formatName>
             <useAllFileFilter>true</useAllFileFilter>
-            <text>Import MetOp-AVHRR/3 Level-1b Product...</text>
+            <text>MetOp-AVHRR/3 Level-1b</text>
             <mnemonic/>
             <shortDescr>Import a MetOp-AVHRR/3 Level-1b data product or product subset.</shortDescr>
             <description>Import a MetOp-AVHRR/3 Level-1b data product or product subset.</description>

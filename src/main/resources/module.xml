@@ -1,7 +1,7 @@
 <module>
     <manifestVersion>1.0.0</manifestVersion>
     <symbolicName>beam-metop-avhrr-reader</symbolicName>
-    <version>1.5.3</version>
+    <version>1.5.4</version>
     <name>MetOp-AVHRR Product Reader</name>
     <funding>EUMETSAT</funding>
 
@@ -15,6 +15,11 @@
 
     <changelog>
         <![CDATA[
+        From 1.5.3 to 1.5.4<br>
+        <ul>
+        <li> change dependency beam-avhrr-reader from 1.2 to 1.2.1</li>
+        <li> change test dependency JUnit 4.4 to 4.11</li>
+        </ul>
         From 1.5 to 1.5.2<br>
         <ul>
         <li>[BEAM-1318] Adapt API of METOP reader to changes in AVHRR reader</li>
@@ -42,7 +47,7 @@
         <li>[BEAM-715] METOP product from UMARFcan not be opened</li>
         </ul>
         ]]>
-        
+
     </changelog>
     <vendor>Brockmann Consult GmbH</vendor>
     <contactAddress>Max Planck Str.2, 21502 Geesthacht (Germany)</contactAddress>

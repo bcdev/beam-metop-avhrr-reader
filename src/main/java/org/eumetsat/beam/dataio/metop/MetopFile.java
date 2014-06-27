@@ -354,7 +354,7 @@ class MetopFile extends AvhrrFile {
     }
 
     @Override
-    public int getTiePointSupsampling() {
+    public int getTiePointSubsampling() {
         return AvhrrConstants.TP_SUB_SAMPLING_X;
     }
 
@@ -452,7 +452,7 @@ class MetopFile extends AvhrrFile {
     }
 
     @Override
-    public RawCoordinates getRawCoordiantes(int sourceOffsetX,
+    public RawCoordinates getRawCoordinates(int sourceOffsetX,
             int sourceOffsetY, int sourceWidth, int sourceHeight) {
         RawCoordinates coordinates = new RawCoordinates();
         if (northbound) {

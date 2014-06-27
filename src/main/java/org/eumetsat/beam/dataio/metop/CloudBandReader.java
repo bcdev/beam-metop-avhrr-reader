@@ -65,8 +65,8 @@ class CloudBandReader implements BandReader {
     }
 
     @Override
-    public float getScalingFactor() {
-        return 1f;
+    public double getScalingFactor() {
+        return 1.0;
     }
 
     @Override
@@ -79,7 +79,7 @@ class CloudBandReader implements BandReader {
                                    final ProductData destBuffer,
                                    final ProgressMonitor pm) throws IOException {
         
-        AvhrrFile.RawCoordinates rawCoord = metopFile.getRawCoordiantes(
+        AvhrrFile.RawCoordinates rawCoord = metopFile.getRawCoordinates(
                 sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight);
         final short[] targetData = (short[]) destBuffer.getElems();
 

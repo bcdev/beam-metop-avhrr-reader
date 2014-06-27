@@ -75,8 +75,8 @@ class CalibratedBandReader extends PlainBandReader {
     }
 
     @Override
-    public float getScalingFactor() {
-        return 1;
+    public double getScalingFactor() {
+        return 1.0;
     }
 
     @Override
@@ -94,10 +94,10 @@ class CalibratedBandReader extends PlainBandReader {
                                    final ProductData destBuffer,
                                    final ProgressMonitor pm) throws IOException {
 
-        AvhrrFile.RawCoordinates rawCoord = metopFile.getRawCoordiantes(
+        AvhrrFile.RawCoordinates rawCoord = metopFile.getRawCoordinates(
                 sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight);
         final float[] targetData = (float[]) destBuffer.getElems();
-        final float scalingFactor = super.getScalingFactor();
+        final float scalingFactor = (float) super.getScalingFactor();
 
         pm.beginTask(MessageFormat.format("Reading AVHRR band ''{0}''...", getBandName()), rawCoord.maxY - rawCoord.minY);
 

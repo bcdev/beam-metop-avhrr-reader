@@ -78,11 +78,11 @@ class PlainBandReader implements BandReader {
     }
 
     @Override
-    public float getScalingFactor() {
+    public double getScalingFactor() {
         if (channel == AvhrrConstants.CH_3A || channel == AvhrrConstants.CH_3B) {
-            return 1E-4f;
+            return 1E-4;
         } else {
-            return 1E-2f;
+            return 1E-2;
         }
     }
 
@@ -101,7 +101,7 @@ class PlainBandReader implements BandReader {
                                    final ProductData destBuffer,
                                    final ProgressMonitor pm) throws IOException {
 
-        AvhrrFile.RawCoordinates rawCoord = metopFile.getRawCoordiantes(
+        AvhrrFile.RawCoordinates rawCoord = metopFile.getRawCoordinates(
                 sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight);
         final short[] targetData = (short[]) destBuffer.getElems();
 

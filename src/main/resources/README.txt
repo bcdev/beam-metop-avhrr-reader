@@ -13,7 +13,7 @@ Document title: Brief Documentation of the MetopReader plugin
                 A plug-in for MERIS/(A)ATSR Toolbox (BEAM)
 
 Release date:	March 22, 2007
-Last update:    March 22, 2007
+Last update:    October 31, 2014
 
 
 Introduction
@@ -30,7 +30,7 @@ The MetopReader is a plug-in module for the BEAM software developed
 by Brockmann Consult under contract to ESA. This latter software must of 
 course be installed prior to the plugin.
 
-This plug-in requires BEAM version 4.0 or higher.
+This plug-in requires BEAM version 5.0 or higher.
 
 The BEAM software includes an application programming interface (API) and
 a set of executable tools to facilitate the use of MERIS, AATSR and further

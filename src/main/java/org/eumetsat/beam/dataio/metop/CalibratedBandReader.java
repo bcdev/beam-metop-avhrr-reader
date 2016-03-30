@@ -94,8 +94,8 @@ class CalibratedBandReader extends PlainBandReader {
                                    final ProductData destBuffer,
                                    final ProgressMonitor pm) throws IOException {
 
-        AvhrrFile.RawCoordinates rawCoord = metopFile.getRawCoordinates(
-                sourceOffsetX, sourceOffsetY, sourceWidth, sourceHeight);
+        AvhrrFile.RawCoordinates rawCoord = metopFile.getRawCoordinates(sourceOffsetX, sourceOffsetY,
+                                                                        sourceWidth, sourceHeight);
         final float[] targetData = (float[]) destBuffer.getElems();
         final float scalingFactor = (float) super.getScalingFactor();
 
@@ -115,8 +115,7 @@ class CalibratedBandReader extends PlainBandReader {
                     inputStream.readFully(radianceScanLine, 0, sourceWidth);
 
                     for (int sourceX = 0; sourceX <= sourceWidth - 1; sourceX++) {
-                        targetData[targetIdx] = calibrator
-                                .calibrate(radianceScanLine[sourceX] * scalingFactor);
+                        targetData[targetIdx] = calibrator.calibrate(radianceScanLine[sourceX] * scalingFactor);
                         targetIdx += rawCoord.targetIncrement;
                     }
                 }

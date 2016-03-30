@@ -23,7 +23,6 @@ import org.esa.beam.dataio.avhrr.AvhrrFile;
 import org.esa.beam.dataio.avhrr.BandReader;
 import org.esa.beam.dataio.avhrr.FlagReader;
 import org.esa.beam.dataio.avhrr.HeaderUtil;
-import org.esa.beam.dataio.avhrr.calibration.Radiance2ReflectanceFactorCalibrator;
 import org.esa.beam.dataio.avhrr.calibration.Radiance2TemperatureCalibrator;
 import org.esa.beam.dataio.avhrr.calibration.RadianceCalibrator;
 import org.esa.beam.framework.datamodel.MetadataElement;
@@ -113,9 +112,9 @@ class MetopFile extends AvhrrFile {
                 || mphrHeader.instrumentGroup != GenericRecordHeader.InstrumentGroup.GENERIC
                 || mphrHeader.recordSubclass != 0) {
             throw new IOException("Unsupported product: bad MPHR. RecordClass="
-                    + mphrHeader.recordClass + " InstrumentGroup="
-                    + mphrHeader.instrumentGroup + " RecordSubclass="
-                    + mphrHeader.recordSubclass);
+                                          + mphrHeader.recordClass + " InstrumentGroup="
+                                          + mphrHeader.instrumentGroup + " RecordSubclass="
+                                          + mphrHeader.recordSubclass);
         }
         mainProductHeaderRecord = new MainProductHeaderRecord();
         mainProductHeaderRecord.readRecord(inputStream);
@@ -131,17 +130,17 @@ class MetopFile extends AvhrrFile {
                 || sphrHeader.instrumentGroup != GenericRecordHeader.InstrumentGroup.AVHRR_3
                 || sphrHeader.recordSubclass != 0) {
             throw new IOException("Unsupported product: bad SPHR. RecordClass="
-                    + sphrHeader.recordClass + " InstrumentGroup="
-                    + sphrHeader.instrumentGroup + " RecordSubclass="
-                    + sphrHeader.recordSubclass);
+                                          + sphrHeader.recordClass + " InstrumentGroup="
+                                          + sphrHeader.instrumentGroup + " RecordSubclass="
+                                          + sphrHeader.recordSubclass);
         }
         secondaryProductHeaderRecord = new SecondaryProductHeaderRecord();
         secondaryProductHeaderRecord.readRecord(inputStream);
 
         if (secondaryProductHeaderRecord.getIntValue("EARTH_VIEWS_PER_SCANLINE") != EXPECTED_PRODUCT_WIDTH) {
             throw new IOException("Unsupported product: bad SPHR. " +
-                    "EARTH_VIEWS_PER_SCANLINE is not " + EXPECTED_PRODUCT_WIDTH + ". Actual value: " +
-                    secondaryProductHeaderRecord.getIntValue("EARTH_VIEWS_PER_SCANLINE"));
+                                          "EARTH_VIEWS_PER_SCANLINE is not " + EXPECTED_PRODUCT_WIDTH + ". Actual value: " +
+                                          secondaryProductHeaderRecord.getIntValue("EARTH_VIEWS_PER_SCANLINE"));
         }
         final int navSampleRate = secondaryProductHeaderRecord.getIntValue("NAV_SAMPLE_RATE");
         if (navSampleRate == LOW_PRECISION_SAMPLE_RATE) {
@@ -154,17 +153,17 @@ class MetopFile extends AvhrrFile {
             productWidth = HIGH_PRECISION_PRODUCT_WIDTH;
         } else {
             throw new IOException("Unsupported product: bad SPHR. " +
-                    "NAV_SAMPLE_RATE is: " + navSampleRate);
+                                          "NAV_SAMPLE_RATE is: " + navSampleRate);
         }
         readerInfo
                 .addAttribute(HeaderUtil
-                        .createAttribute("TRIM_LEFT", numTrimX, "pixel",
-                                "Number of pixel cut from the left of the product to match the tie-points."));
+                                      .createAttribute("TRIM_LEFT", numTrimX, "pixel",
+                                                       "Number of pixel cut from the left of the product to match the tie-points."));
         readerInfo
                 .addAttribute(HeaderUtil
-                        .createAttribute("TRIM_RIGHT", EXPECTED_PRODUCT_WIDTH
-                                - numTrimX - productWidth, "pixel",
-                                "Number of pixel cut from the right of the product to match the tie-points."));
+                                      .createAttribute("TRIM_RIGHT", EXPECTED_PRODUCT_WIDTH
+                                                               - numTrimX - productWidth, "pixel",
+                                                       "Number of pixel cut from the right of the product to match the tie-points."));
 
         List<InternalPointerRecord> iprs = new ArrayList<InternalPointerRecord>();
         InternalPointerRecord internalPointerRecord;
@@ -194,7 +193,7 @@ class MetopFile extends AvhrrFile {
                     geadrMetadata = new MetadataElement("GEADR");
                 }
                 geadrMetadata.addAttribute(HeaderUtil.createAttribute(Integer.toString(grh.recordSubclass),
-                        new String(geadrText)));
+                                                                      new String(geadrText)));
             } else if (ipr.targetRecordClass == GenericRecordHeader.RecordClass.MDR) {
                 firstMdrOffset = ipr.targetRecordOffset;
             }
@@ -203,7 +202,7 @@ class MetopFile extends AvhrrFile {
         int toSkip = checkMdrs(navSampleRate);
         analyzeFrameIndicator();
 
-        readerInfo.addAttribute(HeaderUtil.createAttribute("TRIM_BOTTOM",toSkip, "pixel", "Number of lines cut from the end of the product to match the tie-points."));
+        readerInfo.addAttribute(HeaderUtil.createAttribute("TRIM_BOTTOM", toSkip, "pixel", "Number of lines cut from the end of the product to match the tie-points."));
     }
 
     @Override
@@ -244,9 +243,7 @@ class MetopFile extends AvhrrFile {
 
     @Override
     public BandReader createReflectanceFactorBandReader(int channel) {
-        RadianceCalibrator radianceCalibrator = new Radiance2ReflectanceFactorCalibrator(
-                giadrRadiance.getEquivalentWidth(channel), giadrRadiance
-                .getSolarIrradiance(channel), 1);
+        RadianceCalibrator radianceCalibrator = new MetopRad2ReflFactorCalibrator(giadrRadiance.getSolarIrradiance(channel), 1);
         //TODO this 1 should be the earth-sun-distance-ratio, but this ratio is always 0.
         return new CalibratedBandReader(channel, this, inputStream, radianceCalibrator);
     }
@@ -453,7 +450,7 @@ class MetopFile extends AvhrrFile {
 
     @Override
     public RawCoordinates getRawCoordinates(int sourceOffsetX,
-            int sourceOffsetY, int sourceWidth, int sourceHeight) {
+                                            int sourceOffsetY, int sourceWidth, int sourceHeight) {
         RawCoordinates coordinates = new RawCoordinates();
         if (northbound) {
             coordinates.minX = productWidth - sourceOffsetX - sourceWidth;
@@ -472,7 +469,7 @@ class MetopFile extends AvhrrFile {
         }
         coordinates.minX += numTrimX;
         coordinates.maxX += numTrimX;
-        
+
         return coordinates;
     }
 

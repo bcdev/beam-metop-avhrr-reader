@@ -72,7 +72,7 @@ After starting the VISAT application you will find the new menu entry
 This plugin allows you to import METOP-AVHRR/3 products.
 
 The specification for these data products can be found at the following location:
-http://www.eumetsat.int/idcplg?IdcService=SS_GET_PAGE&ssDocName=SP_1126189367518&l=en&ssTargetNodeId=546
+http://www.eumetsat.int/website/wcm/idc/idcplg?IdcService=GET_FILE&dDocName=PDF_AVHRR_L1B_PRODUCT_GUIDE&RevisionSelectionMethod=LatestReleased&Rendition=Web
 
 General information about the METOP satellite can be found here:
 http://www.eumetsat.int/idcplg?IdcService=SS_GET_PAGE&nodeId=47&l=en
